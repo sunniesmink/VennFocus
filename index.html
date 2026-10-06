@@ -3,553 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VennFocus - Media Digital Himpunan Inklusif</title>
+    <title>VennFocus - Media Belajar Himpunan ADHD-Friendly</title>
     <style>
         :root {
-            --bg-color: #f0f7f9;
+            --bg-color: #f7f9fc;
             --card-bg: #ffffff;
-            --primary: #3a86ff;
-            --primary-hover: #2563eb;
-            --secondary: #00b4d8;
-            --accent: #ff006e;
-            --text-main: #2b2d42;
-            --text-sub: #5c677d;
-            --set-a: rgba(255, 179, 198, 0.55);
-            --set-b: rgba(144, 224, 239, 0.55);
-            --correct: #38b000;
-            --error: #e63946;
+            --primary: #4361ee;
+            --primary-hover: #3f37c9;
+            --accent-pink: #ff70a6;
+            --accent-blue: #4cc9f0;
+            --accent-yellow: #ffd166;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --correct: #10b981;
+            --error: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            padding: 12px;
+            color: var(--text-dark);
             min-height: 100vh;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 520px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-            padding: 20px;
             display: flex;
             flex-direction: column;
+        }
+
+        /* Top Bar Header */
+        header {
+            background: var(--card-bg);
+            border-bottom: 2px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
             justify-content: space-between;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 16px;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .logo-title {
-            font-size: 24px;
+        .brand-logo {
+            background: linear-gradient(135deg, var(--accent-pink), var(--primary));
+            color: #fff;
+            font-weight: 900;
+            font-size: 20px;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .brand-title {
+            font-size: 20px;
             font-weight: 800;
             color: var(--primary);
-            letter-spacing: 0.5px;
         }
 
-        .subtitle {
-            font-size: 13px;
-            color: var(--text-sub);
-            margin-top: 2px;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            background: #e9ecef;
-            height: 10px;
-            border-radius: 10px;
-            margin: 14px 0 20px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 14%;
-            background: linear-gradient(90deg, var(--secondary), var(--primary));
-            transition: width 0.3s ease;
-            border-radius: 10px;
-        }
-
-        .step-badge {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0369a1;
-            font-size: 12px;
+        .badge-adhd {
+            background: #fef3c7;
+            color: #d97706;
+            font-size: 11px;
             font-weight: 700;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            margin-bottom: 10px;
+            border: 1px solid #fde68a;
         }
 
-        .step-content {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .step-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            font-size: 18px;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        p.description {
-            font-size: 14px;
-            color: var(--text-sub);
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .info-box {
-            background: #f8fafc;
-            border-left: 4px solid var(--primary);
-            padding: 12px 14px;
-            border-radius: 8px;
-            font-size: 13.5px;
-            color: #334155;
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        /* Interactive Venn Diagram Styling */
-        .venn-wrapper {
-            position: relative;
+        /* Main Layout */
+        .layout-container {
+            display: flex;
+            flex: 1;
+            max-width: 1280px;
             width: 100%;
-            height: 240px;
-            background: #f1f5f9;
-            border: 2px dashed #cbd5e1;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Navigation Sidebar */
+        aside.sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 16px;
-            margin: 16px 0;
-            overflow: hidden;
-        }
-
-        .venn-circle {
-            position: absolute;
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            top: 40px;
+            padding: 16px;
             display: flex;
-            align-items: flex-start;
-            padding: 10px;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.2s;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
 
-        .circle-a {
-            left: 50px;
-            background: var(--set-a);
-            border: 2px solid #ff4d6d;
-            color: #a4133c;
-        }
-
-        .circle-b {
-            right: 50px;
-            background: var(--set-b);
-            border: 2px solid #0096c7;
-            color: #03045e;
-            justify-content: flex-end;
-        }
-
-        .venn-zone {
-            position: absolute;
-            cursor: pointer;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: center;
-            justify-content: center;
-            gap: 4px;
-            padding: 6px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .zone-only-a { top: 70px; left: 60px; width: 70px; height: 100px; }
-        .zone-intersection { top: 70px; left: 180px; width: 120px; height: 100px; z-index: 5; }
-        .zone-only-b { top: 70px; right: 60px; width: 70px; height: 100px; }
-        .zone-outside { top: 6px; left: 6px; right: 6px; height: 35px; }
-
-        .venn-zone:hover {
-            background: rgba(58, 134, 255, 0.15);
-        }
-
-        /* Card Selector */
-        .cards-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 14px;
-            justify-content: center;
-        }
-
-        .item-card {
-            background: #ffffff;
-            border: 2px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 8px 14px;
+        .sidebar-title {
             font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            font-weight: 700;
         }
 
-        .item-card.selected {
-            border-color: var(--primary);
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+        }
+
+        .nav-item.active {
             background: #eff6ff;
             color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Content Area */
+        main.content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        h2.topic-title {
+            font-size: 20px;
+            color: var(--text-dark);
+        }
+
+        .definition-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 14px 18px;
+            border-left: 4px solid var(--accent-blue);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Venn Diagram Interactive Container */
+        .interactive-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .cards-draggable {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .draggable-item {
+            background: #fff;
+            border: 2px solid var(--accent-blue);
+            color: #0284c7;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+
+        .draggable-item.selected {
+            background: var(--accent-blue);
+            color: #fff;
             transform: scale(1.05);
         }
 
-        .item-card.placed {
-            font-size: 11px;
-            padding: 3px 7px;
-            border-radius: 6px;
-            background: #ffffff;
-            border: 1px solid #94a3b8;
+        .venn-canvas {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            height: 250px;
+            background: #fafafa;
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            overflow: hidden;
         }
 
-        /* Feedback styling */
-        .feedback-box {
-            padding: 10px 14px;
+        .circle {
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            top: 40px;
+            opacity: 0.65;
+            transition: opacity 0.3s;
+        }
+
+        .circle-left {
+            left: 70px;
+            background: var(--accent-pink);
+        }
+
+        .circle-right {
+            right: 70px;
+            background: var(--accent-blue);
+        }
+
+        .circle-label {
+            position: absolute;
+            font-weight: 800;
+            font-size: 14px;
+            top: 15px;
+        }
+
+        .label-a { left: 90px; color: #be185d; }
+        .label-b { right: 90px; color: #0369a1; }
+
+        .drop-zone {
+            position: absolute;
+            z-index: 10;
+            cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .drop-zone:hover {
+            background: rgba(67, 97, 238, 0.15);
+        }
+
+        .zone-only-a { top: 60px; left: 80px; width: 80px; height: 120px; }
+        .zone-intersect { top: 60px; left: 185px; width: 90px; height: 120px; }
+        .zone-only-b { top: 60px; right: 80px; width: 80px; height: 120px; }
+        .zone-out { top: 10px; left: 10px; width: 100px; height: 40px; }
+
+        .placed-tag {
+            background: #ffffff;
+            border: 1px solid var(--text-dark);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Controls / Reset Button */
+        .controls-bar {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-reset {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-reset:hover {
+            background: #e2e8f0;
+        }
+
+        .feedback-alert {
+            width: 100%;
+            padding: 10px;
             border-radius: 10px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             text-align: center;
-            margin-top: 10px;
             display: none;
         }
 
-        .feedback-box.correct {
+        .feedback-alert.success {
             display: block;
-            background: #dcfce7;
-            color: #15803d;
-            border: 1px solid #86efac;
+            background: #d1fae5;
+            color: #065f46;
         }
 
-        .feedback-box.incorrect {
+        .feedback-alert.error {
             display: block;
-            background: #ffe4e6;
-            color: #b91c1c;
-            border: 1px solid #fecdd3;
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        /* Reflection styling */
-        .reflection-option {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
+        /* Quiz Container */
+        .quiz-option {
             background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            text-align: left;
+            border: 2px solid var(--border);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-weight: 600;
             font-size: 13.5px;
-            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .reflection-option:hover {
+        .quiz-option:hover {
             border-color: var(--primary);
-            background: #f0f7ff;
+            background: #eff6ff;
         }
 
-        /* Navigation Buttons */
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-prev {
-            background: #f1f5f9;
-            color: var(--text-sub);
-        }
-
-        .btn-prev:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .btn-next {
-            background: var(--primary);
-            color: #ffffff;
-        }
-
-        .btn-next:hover {
-            background: var(--primary-hover);
+        @media (max-width: 768px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            aside.sidebar {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div>
-        <header>
-            <div class="logo-title">VennFocus</div>
-            <div class="subtitle">Media Pembelajaran Himpunan Interaktif</div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-        </header>
-
-        <!-- TAHAP 1 -->
-        <div class="step-content active" id="step1">
-            <span class="step-badge">Tahap 1 dari 7</span>
-            <h2>Mengenal Himpunan</h2>
-            <p class="description">Himpunan adalah kumpulan objek atau benda yang terdefinisi dengan jelas.</p>
-            
-            <div class="info-box">
-                <b>Contoh Kontekstual:</b><br>
-                Di kelas SMP, kita mengelompokkan siswa berdasarkan hobinya. 
-                <br>• <b>Himpunan A</b> = Siswa yang menyukai ⚽ Sepak Bola.
-                <br>• <b>Himpunan B</b> = Siswa yang menyukai 🎮 Permainan Video (Game).
-            </div>
-
-            <p class="description">Mari kita lihat nama-nama siswa berikut: <b>Budi, Andi, Citra, Denis, Eka</b>.</p>
-        </div>
-
-        <!-- TAHAP 2 -->
-        <div class="step-content" id="step2">
-            <span class="step-badge">Tahap 2 dari 7</span>
-            <h2>Anggota & Bukan Anggota</h2>
-            <p class="description">Objek di dalam himpunan disebut <b>anggota</b> (ditulis dengan simbol ∈).</p>
-            
-            <div class="info-box">
-                <b>Data Hobi Siswa:</b><br>
-                • Budi: Suka Sepak Bola saja<br>
-                • Andi: Suka Game saja<br>
-                • Citra: Suka Sepak Bola <b>DAN</b> Game<br>
-                • Denis: Suka Sepak Bola saja<br>
-                • Eka: Tidak suka keduanya (Suka Membaca)
-            </div>
-            <p class="description">Artinya, Citra adalah anggota himpunan Sepak Bola sekaligus Game!</p>
-        </div>
-
-        <!-- TAHAP 3 -->
-        <div class="step-content" id="step3">
-            <span class="step-badge">Tahap 3 dari 7</span>
-            <h2>Mengenal Diagram Venn</h2>
-            <p class="description">Diagram Venn menyajikan himpunan dalam bentuk lingkaran di dalam kotak Semesta (S).</p>
-            
-            <div class="venn-wrapper">
-                <div class="venn-circle circle-a">A (Bola)</div>
-                <div class="venn-circle circle-b">B (Game)</div>
-            </div>
-
-            <div class="info-box">
-                • <b>Lingkaran Merah Muda (A):</b> Himpunan Sepak Bola.<br>
-                • <b>Lingkaran Biru (B):</b> Himpunan Game.<br>
-                • <b>Tengah (Irisan):</b> Siswa yang menyukai keduanya.
-            </div>
-        </div>
-
-        <!-- TAHAP 4 -->
-        <div class="step-content" id="step4">
-            <span class="step-badge">Tahap 4 dari 7</span>
-            <h2>Menentukan Irisan (A ∩ B)</h2>
-            <p class="description"><b>Langkah:</b> Pilih nama siswa di bawah, lalu sentuh/klik area Diagram Venn tempat siswa tersebut berada!</p>
-
-            <div class="cards-container" id="cardsStep4">
-                <div class="item-card" onclick="selectCard(this, 'Budi')">Budi (Bola)</div>
-                <div class="item-card" onclick="selectCard(this, 'Andi')">Andi (Game)</div>
-                <div class="item-card" onclick="selectCard(this, 'Citra')">Citra (Keduanya)</div>
-                <div class="item-card" onclick="selectCard(this, 'Eka')">Eka (Luar)</div>
-            </div>
-
-            <div class="venn-wrapper">
-                <div class="venn-circle circle-a">A</div>
-                <div class="venn-circle circle-b">B</div>
-                
-                <div class="venn-zone zone-outside" onclick="placeCard('outside')" id="zone-outside-4">Semesta (Luar)</div>
-                <div class="venn-zone zone-only-a" onclick="placeCard('onlyA')" id="zone-onlyA-4"></div>
-                <div class="venn-zone zone-intersection" onclick="placeCard('intersection')" id="zone-intersection-4"><b>Irisan (A ∩ B)</b></div>
-                <div class="venn-zone zone-only-b" onclick="placeCard('onlyB')" id="zone-onlyB-4"></div>
-            </div>
-
-            <div class="feedback-box" id="feedback4"></div>
-        </div>
-
-        <!-- TAHAP 5 -->
-        <div class="step-content" id="step5">
-            <span class="step-badge">Tahap 5 dari 7</span>
-            <h2>Menentukan Gabungan (A ∪ B)</h2>
-            <p class="description"><b>Gabungan (A ∪ B)</b> adalah seluruh siswa yang menyukai Sepak Bola, Game, ATAU keduanya.</p>
-
-            <div class="info-box">
-                Berdasarkan posisi pada Diagram Venn:<br>
-                <b>A ∪ B = { Budi, Denis, Citra, Andi }</b><br>
-                <i>Catatan: Eka tidak masuk gabungan karena berada di luar kedua lingkaran.</i>
-            </div>
-        </div>
-
-        <!-- TAHAP 6 -->
-        <div class="step-content" id="step6">
-            <span class="step-badge">Tahap 6 dari 7</span>
-            <h2>Menentukan Selisih (A - B)</h2>
-            <p class="description"><b>Selisih (A - B)</b> adalah siswa yang menyukai Sepak Bola TETAPI TIDAK menyukai Game.</p>
-
-            <div class="info-box">
-                Siswa yang HANYA di lingkaran A (tidak kena lingkaran B):<br>
-                <b>A - B = { Budi, Denis }</b>
-            </div>
-        </div>
-
-        <!-- TAHAP 7 -->
-        <div class="step-content" id="step7">
-            <span class="step-badge">Tahap 7 dari 7</span>
-            <h2>Refleksi Belajar Mandiri</h2>
-            <p class="description">Hebat! Kamu telah menyelesaikan petualangan belajar himpunan. Bagaimanakah perasaanmu?</p>
-
-            <button class="reflection-option" onclick="finishReflection('Sangat Mudah!')">
-                😊 Saya memahami perbedaan Irisan, Gabungan, dan Selisih dengan sangat baik.
-            </button>
-            <button class="reflection-option" onclick="finishReflection('Butuh Coba Lagi')">
-                🤔 Saya masih butuh sedikit mengulang latihan di bagian Irisan.
-            </button>
-
-            <div class="feedback-box correct" id="finalMsg" style="display:none; margin-top:15px;">
-                Terima kasih atas refleksinya! Kamu bisa mengulang belajar kapan saja. 🎉
-            </div>
-        </div>
+<header>
+    <div class="brand">
+        <div class="brand-logo">VF</div>
+        <div class="brand-title">VennFocus</div>
     </div>
+    <span class="badge-adhd">⚡ Fokus & Inklusif</span>
+</header>
 
-    <!-- Bottom Navigation -->
-    <div class="nav-buttons">
-        <button class="btn btn-prev" id="btnPrev" onclick="changeStep(-1)" disabled>Kembali</button>
-        <button class="btn btn-next" id="btnNext" onclick="changeStep(1)">Lanjut</button>
-    </div>
+<div class="layout-container">
+    <!-- Sidebar Sub-Materi & Latihan -->
+    <aside class="sidebar">
+        <div class="sidebar-title">Sub-Materi Belajar</div>
+        <ul class="nav-list">
+            <li class="nav-item active" onclick="switchTab('sub1', this)">
+                <span>1. Konsep & Semesta</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('sub2', this)">
+                <span>2. Irisan (A ∩ B)</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('sub3', this)">
+                <span>3. Gabungan (A ∪ B)</span>
+            </li>
+            <li class="nav-item" onclick="switchTab('sub4', this)">
+                <span>4. Selisih (A - B)</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-title" style="margin-top: 10px;">Evaluasi</div>
+        <ul class="nav-list">
+            <li class="nav-item" onclick="switchTab('quiz', this)">
+                <span>📝 Latihan Soal Interaktif</span>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Interactive Area -->
+    <main class="content">
+        <!-- Sub-Materi 1 -->
+        <div id="sub1" class="content-card tab-pane">
+            <div class="card-header">
+                <h2 class="topic-title">1. Pengenalan Himpunan & Semesta (S)</h2>
+            </div>
+            <div class="definition-box">
+                <b>Himpunan</b> adalah kumpulan benda/objek yang terdefinisi dengan jelas.<br>
+                <b>Semesta (S)</b> adalah wadah seluruh objek yang sedang dibicarakan.
+            </div>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+                Pilih topik di sebelah kiri untuk mulai mengeksplorasi operasi himpunan interaktif!
+            </p>
+        </div>
+
+        <!-- Sub-Materi 2 (Irisan) -->
+        <div id="sub2" class="content-card tab-pane" style="display:none;">
+            <div class="card-header">
+                <h2 class="topic-title">2. Irisan Dua Himpunan (A ∩ B)</h2>
+            </div>
+            <div class="definition-box">
+                <b>Irisan (A ∩ B)</b> adalah anggota yang dimiliki bersama oleh Himpunan A <b>DAN</b> Himpunan B (wilayah tumpang tindih di tengah).
+            </div>
+
+            <div class="interactive-section">
+                <p style="font-size: 13px; font-weight: 700; color: var(--text-muted);">
+                    Klik nama siswa di bawah, lalu klik wilayah Diagram Venn yang sesuai:
+                </p>
+
+                <div class="cards-draggable" id="dragContainer">
+                    <div class="draggable-item" onclick="pickCard(this, 'Budi', 'A')">Budi (Bola)</div>
+                    <div class="draggable-item" onclick="pickCard(this, 'Citra', 'BOTH')">Citra (Bola & Game)</div>
+                    <div class="draggable-item" onclick="pickCard(this, 'Andi', 'B')">Andi (Game)</div>
+                </div>
+
+                <div class="venn-canvas">
+                    <span class="circle-label label-a">A (Bola)</span>
+                    <span class="circle-label label-b">B (Game)</span>
+                    <div class="circle circle-left"></div>
+                    <div class="circle circle-right"></div>
+
+                    <div class="drop-zone zone-out" onclick="placeInZone('OUT')" id="z-OUT">Luar</div>
+                    <div class="drop-zone zone-only-a" onclick="placeInZone('A')" id="z-A"></div>
+                    <div class="drop-zone zone-intersect" onclick="placeInZone('BOTH')" id="z-BOTH"><b>Irisan</b></div>
+                    <div class="drop-zone zone-only-b" onclick="placeInZone('B')" id="z-B"></div>
+                </div>
+
+                <div class="feedback-alert" id="feedback"></div>
+
+                <div class="controls-bar">
+                    <button class="btn-reset" onclick="resetInteractive()">🔄 Refresh / Coba Lagi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sub-Materi 3 (Gabungan) -->
+        <div id="sub3" class="content-card tab-pane" style="display:none;">
+            <div class="card-header">
+                <h2 class="topic-title">3. Gabungan Dua Himpunan (A ∪ B)</h2>
+            </div>
+            <div class="definition-box">
+                <b>Gabungan (A ∪ B)</b> mencakup seluruh anggota Himpunan A, Himpunan B, maupun keduanya secara keseluruhan.
+            </div>
+            <p style="font-size: 14px; color: var(--text-dark);">
+                Formula: <b>A ∪ B = { Budi, Citra, Andi }</b>
+            </p>
+        </div>
+
+        <!-- Sub-Materi 4 (Selisih) -->
+        <div id="sub4" class="content-card tab-pane" style="display:none;">
+            <div class="card-header">
+                <h2 class="topic-title">4. Selisih Dua Himpunan (A - B)</h2>
+            </div>
+            <div class="definition-box">
+                <b>Selisih (A - B)</b> adalah anggota Himpunan A yang <b>TIDAK</b> menjadi anggota Himpunan B (Murni hanya A).
+            </div>
+            <p style="font-size: 14px; color: var(--text-dark);">
+                Formula: <b>A - B = { Budi }</b>
+            </p>
+        </div>
+
+        <!-- Latihan Soal -->
+        <div id="quiz" class="content-card tab-pane" style="display:none;">
+            <div class="card-header">
+                <h2 class="topic-title">📝 Latihan Soal Interaktif</h2>
+            </div>
+            <p style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">
+                Soal 1: Jika Himpunan A = {1, 2, 3} dan Himpunan B = {3, 4, 5}, manakah anggota dari Irisan (A ∩ B)?
+            </p>
+            <div class="quiz-option" onclick="checkQuiz(false, this)">A. {1, 2, 3, 4, 5}</div>
+            <div class="quiz-option" onclick="checkQuiz(true, this)">B. {3}</div>
+            <div class="quiz-option" onclick="checkQuiz(false, this)">C. {1, 2}</div>
+
+            <div class="feedback-alert" id="quizFeedback" style="margin-top: 14px;"></div>
+        </div>
+    </main>
 </div>
 
 <script>
-    let currentStep = 1;
-    const totalSteps = 7;
-    let selectedCard = null;
+    let activeCard = null;
+    let placedData = {};
 
-    const correctPlacement = {
-        'Budi': 'onlyA',
-        'Andi': 'onlyB',
-        'Citra': 'intersection',
-        'Eka': 'outside'
-    };
-
-    let userPlacement = {};
-
-    function updateStepView() {
-        document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-        document.getElementById(`step${currentStep}`).classList.add('active');
-
-        // Update progress bar
-        const progress = (currentStep / totalSteps) * 100;
-        document.getElementById('progressBar').style.width = `${progress}%`;
-
-        // Nav buttons state
-        document.getElementById('btnPrev').disabled = (currentStep === 1);
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         
-        if (currentStep === totalSteps) {
-            document.getElementById('btnNext').style.display = 'none';
-        } else {
-            document.getElementById('btnNext').style.display = 'block';
-        }
+        document.getElementById(tabId).style.display = 'block';
+        element.classList.add('active');
     }
 
-    function changeStep(dir) {
-        if (currentStep + dir >= 1 && currentStep + dir <= totalSteps) {
-            currentStep += dir;
-            updateStepView();
-        }
+    function pickCard(el, name, correctZone) {
+        document.querySelectorAll('.draggable-item').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        activeCard = { el, name, correctZone };
     }
 
-    function selectCard(cardEl, name) {
-        document.querySelectorAll('#cardsStep4 .item-card').forEach(c => c.classList.remove('selected'));
-        cardEl.classList.add('selected');
-        selectedCard = name;
+    function placeInZone(zone) {
+        if (!activeCard) return;
+
+        placedData[activeCard.name] = (zone === activeCard.correctZone);
+
+        const targetZone = document.getElementById(`z-${zone}`);
+        const tag = document.createElement('span');
+        tag.className = 'placed-tag';
+        tag.innerText = activeCard.name;
+        targetZone.appendChild(tag);
+
+        activeCard.el.style.visibility = 'hidden';
+        activeCard = null;
+
+        verifyStatus();
     }
 
-    function placeCard(zoneId) {
-        if (!selectedCard) {
-            alert('Silakan pilih nama siswa terlebih dahulu!');
-            return;
-        }
-
-        userPlacement[selectedCard] = zoneId;
-
-        // Render card inside zone
-        const targetZone = document.getElementById(`zone-${zoneId}-4`);
-        const newCard = document.createElement('div');
-        newCard.className = 'item-card placed';
-        newCard.innerText = selectedCard;
-        targetZone.appendChild(newCard);
-
-        // Hide selected card from choices
-        document.querySelectorAll('#cardsStep4 .item-card').forEach(c => {
-            if (c.classList.contains('selected')) {
-                c.style.visibility = 'hidden';
-            }
-        });
-
-        selectedCard = null;
-        checkStep4AutoCorrection();
-    }
-
-    function checkStep4AutoCorrection() {
-        if (Object.keys(userPlacement).length === 4) {
-            let isAllCorrect = true;
-            for (let name in correctPlacement) {
-                if (userPlacement[name] !== correctPlacement[name]) {
-                    isAllCorrect = false;
-                    break;
-                }
-            }
-
-            const feedbackEl = document.getElementById('feedback4');
-            if (isAllCorrect) {
-                feedbackEl.className = 'feedback-box correct';
-                feedbackEl.innerText = '✨ Luar Biasa! Semua posisi anggota himpunan sudah tepat!';
+    function verifyStatus() {
+        const feedback = document.getElementById('feedback');
+        const keys = Object.keys(placedData);
+        if (keys.length === 3) {
+            const allCorrect = Object.values(placedData).every(v => v === true);
+            if (allCorrect) {
+                feedback.className = 'feedback-alert success';
+                feedback.innerText = '🎉 Luar biasa! Semua penempatan posisi himpunan tepat!';
             } else {
-                feedbackEl.className = 'feedback-box incorrect';
-                feedbackEl.innerText = '💡 Masih ada posisi yang kurang pas. Cobalah ingat: Citra menyukai KEDUANYA maka ada di tengah!';
+                feedback.className = 'feedback-alert error';
+                feedback.innerText = '⚠️ Ada penempatan yang kurang tepat. Klik tombol Refresh untuk mencoba lagi.';
             }
         }
     }
 
-    function finishReflection(choice) {
-        document.getElementById('finalMsg').style.display = 'block';
+    function resetInteractive() {
+        activeCard = null;
+        placedData = {};
+        document.querySelectorAll('.placed-tag').forEach(t => t.remove());
+        document.querySelectorAll('.draggable-item').forEach(c => {
+            c.style.visibility = 'visible';
+            c.classList.remove('selected');
+        });
+        const feedback = document.getElementById('feedback');
+        feedback.className = 'feedback-alert';
+        feedback.innerText = '';
+    }
+
+    function checkQuiz(isCorrect, element) {
+        const fb = document.getElementById('quizFeedback');
+        if (isCorrect) {
+            fb.className = 'feedback-alert success';
+            fb.innerText = '✨ Jawabannya tepat sekali! Anggota irisan adalah angka yang ada di kedua himpunan.';
+        } else {
+            fb.className = 'feedback-alert error';
+            fb.innerText = '❌ Masih belum tepat. Cobalah cari angka yang muncul di Himpunan A sekaligus Himpunan B!';
+        }
     }
 </script>
 
