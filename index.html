@@ -1,676 +1,674 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VennFocus - Media Belajar Himpunan Formal</title>
-    <style>
-        :root {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --accent-pink: #ec4899;
-            --accent-blue: #06b6d4;
-            --text-dark: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --correct-bg: #dcfce7;
-            --correct-text: #166534;
-            --error-bg: #fee2e2;
-            --error-text: #991b1b;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#3b6fd4">
+<title>VennFocus – Belajar Himpunan</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#ffffff; --ink:#1f2a37; --muted:#5b6776; --line:#dde3ec;
+  --blue:#3b6fd4; --blue-d:#2a56ad; --blue-soft:#dbe7fb;
+  --amber:#e08a2b; --amber-d:#a55f12; --amber-soft:#fde8c9;
+  --lens:#e3d9f7;
+  --green:#2c9c68; --green-soft:#d5f0e1;
+  --red:#c0562f; --red-soft:#fbe0d6;
+  --shadow:0 2px 12px rgba(31,42,55,.07);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:18px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+#app{max-width:680px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:0 16px}
+h1,h2{line-height:1.25;margin:0 0 .6em}
+h1{font-size:2rem} h2{font-size:1.4rem}
+p{margin:0 0 .9em}
+.muted{color:var(--muted)}
+:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-        }
+/* header & progress */
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 0 6px}
+.brand{font-weight:800;color:var(--blue);font-size:1.1rem;background:none;border:0;cursor:pointer;padding:6px 0;font-family:inherit}
+.ghost{background:none;border:2px solid var(--line);border-radius:12px;padding:6px 14px;font:inherit;font-size:.95rem;cursor:pointer;color:var(--ink);background:#fff}
+.prog{display:flex;gap:6px;margin:6px 0 10px}
+.prog i{flex:1;height:8px;border-radius:6px;background:#d7deea}
+.prog i.done{background:var(--green)}
+.prog i.cur{background:var(--blue)}
+.where{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;color:var(--muted);margin:0 0 12px}
+.where b{color:var(--ink)}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+/* main card */
+.page{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:22px 20px;margin-bottom:96px}
+.page:focus{outline:none}
+.ex{border-radius:14px;padding:12px 16px;margin:12px 0;border-left:6px solid}
+.ex.good{background:var(--green-soft);border-color:var(--green)}
+.ex.bad{background:var(--red-soft);border-color:var(--red)}
+.ex.info{background:var(--blue-soft);border-color:var(--blue)}
+.tip{background:#fff7e6;border-radius:14px;padding:10px 14px;font-size:.95rem}
+.math{font-size:1.25rem;font-weight:700;text-align:center;background:#f0f4fb;border-radius:14px;padding:10px;margin:10px 0}
+.kw{display:inline-block;padding:0 8px;border-radius:8px;background:var(--blue-soft);font-weight:700;color:var(--blue-d)}
 
-        /* Top Bar Header */
-        header {
-            background: var(--card-bg);
-            border-bottom: 2px solid var(--border);
-            padding: 14px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+/* buttons */
+.btn{min-height:54px;padding:0 22px;border-radius:14px;border:2px solid transparent;font:inherit;font-weight:700;cursor:pointer}
+.pri{background:var(--blue);color:#fff}
+.pri:hover:not(:disabled){background:var(--blue-d)}
+.pri:disabled{background:#b9c4d6;cursor:not-allowed}
+.sec{background:#fff;border-color:var(--line);color:var(--ink)}
+.sec:disabled{opacity:.45;cursor:not-allowed}
+.nav{position:sticky;bottom:0;display:flex;gap:12px;padding:16px 0 18px;background:linear-gradient(rgba(245,247,251,0),var(--bg) 35%);margin-top:auto}
+.nav .pri{flex:1}
+.nav .hint{position:absolute;left:0;right:0;top:-4px;text-align:center;font-size:.85rem;color:var(--muted)}
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+/* choices */
+.q{font-size:1.1rem;font-weight:600}
+.opts{display:grid;gap:10px;margin:12px 0}
+.opt{min-height:56px;text-align:left;padding:10px 16px;border-radius:14px;border:2px solid var(--line);background:#fff;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt.right{background:var(--green-soft);border-color:var(--green);font-weight:700}
+.opt.wrong{background:var(--red-soft);border-color:var(--red);opacity:.75}
+.fb{border-radius:14px;padding:0;min-height:0}
+.fb.good,.fb.try,.fb.info{padding:12px 16px;margin-top:10px}
+.fb.good{background:var(--green-soft)}
+.fb.try{background:#fff1e3}
+.fb.info{background:var(--blue-soft)}
+.fb ul{margin:6px 0 0;padding-left:20px}
 
-        .brand-logo {
-            background: linear-gradient(135deg, var(--primary), var(--accent-blue));
-            color: #fff;
-            font-weight: 800;
-            font-size: 18px;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+/* venn */
+svg.venn{width:100%;height:auto;display:block;margin:10px 0;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+svg.venn .lab{font-weight:800;font-size:22px}
+svg.venn .sub{font-size:13px;font-weight:600}
+svg.venn .zl{font-size:13px;fill:#5b6776;font-weight:600}
+svg.venn .placed,svg.venn .chip{cursor:pointer}
+svg.venn .placed rect,svg.venn .chip rect{fill:#fff;stroke:#7b8798;stroke-width:2}
+svg.venn text.t{font-size:14px;font-weight:700;fill:#1f2a37}
+svg.venn .placed.ok rect{stroke:var(--green);fill:#effaf4}
+svg.venn .placed.bad rect{stroke:var(--red);fill:var(--red-soft);stroke-width:3}
+svg.venn .chip{cursor:default}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.95rem;margin:6px 0}
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:6px;border:2px solid}
+.dot.a{background:var(--blue-soft);border-color:var(--blue)}
+.dot.b{background:var(--amber-soft);border-color:var(--amber)}
+.zbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 12px}
+.zbtns .sec{min-height:48px;font-size:.95rem;padding:0 10px}
+.zbtns .sec:not(:disabled){border-color:var(--blue);color:var(--blue-d)}
+.lbl{font-size:.9rem;color:var(--muted);margin:8px 0 2px}
+.tray{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 12px;min-height:60px}
+.card{touch-action:none;user-select:none;-webkit-user-select:none;text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 12px;font:inherit;cursor:grab;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card b{display:block;font-size:1.05rem}
+.card small{color:var(--muted);font-size:.8rem}
+.card.sel{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 3px rgba(59,111,212,.25)}
+.card.dragging{opacity:.35}
+.ghost-card{position:fixed;transform:translate(-50%,-50%);pointer-events:none;z-index:99;opacity:.95;width:150px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row .btn{flex:1;min-width:130px}
+.ctx{background:#f0f4fb;border-radius:14px;padding:10px 14px}
 
-        .brand-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
-        }
+/* reflection */
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend{font-weight:700;margin-bottom:8px;padding:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip-btn{border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:.95rem;cursor:pointer;min-height:44px}
+.chip-btn.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
 
-        .badge-formal {
-            background: #eff6ff;
-            color: var(--primary);
-            font-size: 12px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid #bfdbfe;
-        }
+/* done / home */
+.donebox{text-align:center;padding:8px 0}
+.donebox .big{width:72px;height:72px;border-radius:50%;background:var(--green-soft);color:var(--green);font-size:2.4rem;line-height:72px;margin:0 auto 12px;font-weight:800}
+.home{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:24px 0}
+.home ul{list-style:none;padding:0;margin:18px auto 28px;display:grid;gap:8px;text-align:left;max-width:360px}
+.home li::before{content:"✓";color:var(--green);font-weight:800;margin-right:10px}
+.home .btn{width:100%;max-width:360px;margin:0 auto 12px;font-size:1.15rem;min-height:60px}
+.small{font-size:.8rem;color:var(--muted);margin-top:18px}
 
-        /* Main Layout */
-        .layout-container {
-            display: flex;
-            flex: 1;
-            max-width: 1280px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 24px;
-            gap: 24px;
-        }
+dialog{border:0;border-radius:20px;padding:20px;max-width:420px;width:calc(100% - 32px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(31,42,55,.45)}
+.mitem{display:flex;gap:10px;align-items:center;width:100%;text-align:left;margin:0 0 8px;min-height:50px;padding:6px 14px;border-radius:12px;border:2px solid var(--line);background:#fff;font:inherit;cursor:pointer}
+.mitem.cur{border-color:var(--blue);background:var(--blue-soft)}
+.mitem .n{width:30px;height:30px;border-radius:50%;background:#e8edf5;display:grid;place-items:center;font-weight:800;font-size:.9rem;flex:none}
+.mitem.ok .n{background:var(--green);color:#fff}
 
-        /* Navigation Sidebar */
-        aside.sidebar {
-            width: 300px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        .sidebar-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            font-weight: 800;
-        }
-
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-dark);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-item:hover {
-            background: #f1f5f9;
-        }
-
-        .nav-item.active {
-            background: #eff6ff;
-            color: var(--primary);
-            border-color: #bfdbfe;
-        }
-
-        /* Main Content Area */
-        main.content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .content-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        .card-header {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 14px;
-        }
-
-        h2.topic-title {
-            font-size: 22px;
-            color: var(--text-dark);
-            font-weight: 800;
-        }
-
-        .math-box {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px 20px;
-            border-left: 5px solid var(--primary);
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 24px;
-        }
-
-        .math-notation {
-            font-family: 'Courier New', Courier, monospace;
-            background: #e2e8f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        /* Venn Canvas Interactive */
-        .interactive-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            background: #fafafa;
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-        }
-
-        .cards-draggable {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .draggable-item {
-            background: #ffffff;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            transition: all 0.2s;
-        }
-
-        .draggable-item.selected {
-            background: var(--primary);
-            color: #ffffff;
-            transform: scale(1.05);
-        }
-
-        .venn-canvas {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            height: 260px;
-            background: #ffffff;
-            border: 2px dashed #cbd5e1;
-            border-radius: 16px;
-        }
-
-        .circle {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            top: 40px;
-            opacity: 0.55;
-        }
-
-        .circle-left { left: 75px; background: var(--accent-pink); }
-        .circle-right { right: 75px; background: var(--accent-blue); }
-
-        .circle-label {
-            position: absolute;
-            font-weight: 800;
-            font-size: 16px;
-            top: 12px;
-        }
-        .label-a { left: 90px; color: #be185d; }
-        .label-b { right: 90px; color: #0891b2; }
-        .label-s { top: 10px; left: 14px; color: #64748b; font-size: 14px; }
-
-        .drop-zone {
-            position: absolute;
-            z-index: 10;
-            cursor: pointer;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 6px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .drop-zone:hover {
-            background: rgba(37, 99, 235, 0.12);
-        }
-
-        .zone-out { top: 35px; left: 15px; width: 80px; height: 180px; }
-        .zone-only-a { top: 60px; left: 85px; width: 85px; height: 130px; }
-        .zone-intersect { top: 60px; left: 190px; width: 100px; height: 130px; }
-        .zone-only-b { top: 60px; right: 85px; width: 85px; height: 130px; }
-
-        .placed-tag {
-            background: #ffffff;
-            border: 1px solid var(--text-dark);
-            border-radius: 6px;
-            padding: 3px 8px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* Control & Buttons */
-        .controls-bar {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-action {
-            background: #ffffff;
-            color: var(--text-dark);
-            border: 1px solid var(--border);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-action:hover {
-            background: #f1f5f9;
-        }
-
-        .feedback-box {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            text-align: center;
-            display: none;
-        }
-
-        .feedback-box.correct {
-            display: block;
-            background: var(--correct-bg);
-            color: var(--correct-text);
-        }
-
-        .feedback-box.error {
-            display: block;
-            background: var(--error-bg);
-            color: var(--error-text);
-        }
-
-        /* Quiz Layout Multiple Items */
-        .quiz-card {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-
-        .quiz-question {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .quiz-option {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            padding: 10px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13.5px;
-            transition: all 0.2s;
-        }
-
-        .quiz-option:hover {
-            border-color: var(--primary);
-            background: #eff6ff;
-        }
-
-        @media (max-width: 800px) {
-            .layout-container { flex-direction: column; }
-            aside.sidebar { width: 100%; }
-        }
-    </style>
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media (min-width:560px){.tray{grid-template-columns:repeat(3,1fr)}.page{padding:28px}}
+</style>
 </head>
 <body>
-
-<header>
-    <div class="brand">
-        <div class="brand-logo">VF</div>
-        <div class="brand-title">VennFocus</div>
-    </div>
-    <span class="badge-formal">📘 Modul Matematika Formal</span>
-</header>
-
-<div class="layout-container">
-    <!-- Sidebar Sub-Materi & Bank Soal -->
-    <aside class="sidebar">
-        <div class="sidebar-title">Materi Pembelajaran</div>
-        <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('sub1', this)">
-                <span>1. Konsep Himpunan & S</span>
-            </li>
-            <li class="nav-item" onclick="switchTab('sub2', this)">
-                <span>2. Irisan (A ∩ B)</span>
-            </li>
-            <li class="nav-item" onclick="switchTab('sub3', this)">
-                <span>3. Gabungan (A ∪ B)</span>
-            </li>
-            <li class="nav-item" onclick="switchTab('sub4', this)">
-                <span>4. Selisih (A - B)</span>
-            </li>
-            <li class="nav-item" onclick="switchTab('sub5', this)">
-                <span>5. Komplemen (Aᶜ)</span>
-            </li>
-        </ul>
-
-        <div class="sidebar-title" style="margin-top: 10px;">Evaluasi</div>
-        <ul class="nav-list">
-            <li class="nav-item" onclick="switchTab('quiz', this)">
-                <span>📝 Bank Soal Interaktif (5)</span>
-            </li>
-        </ul>
-    </aside>
-
-    <!-- Main Content Panel -->
-    <main class="content">
-
-        <!-- Sub 1: Konsep & Semesta -->
-        <div id="sub1" class="content-card tab-pane">
-            <div class="card-header">
-                <h2 class="topic-title">1. Himpunan & Himpunan Semesta (S)</h2>
-            </div>
-            <div class="math-box">
-                <b>Definisi Formal:</b><br>
-                • <b>Himpunan</b> adalah kumpulan objek terdefinisi secara jelas.<br>
-                • <b>Himpunan Semesta ($S$)</b> adalah himpunan yang memuat seluruh objek/elemen yang sedang dibicarakan.<br><br>
-                <b>Contoh Kasus:</b><br>
-                Misalkan $S = \{1, 2, 3, 4, 5, 6, 7, 8\}$<br>
-                $A = \{2, 3, 5, 7\}$ (Bilangan Prima $< 8$)<br>
-                $B = \{1, 3, 5, 7\}$ (Bilangan Ganjil $< 8$)
-            </div>
-        </div>
-
-        <!-- Sub 2: Irisan -->
-        <div id="sub2" class="content-card tab-pane" style="display:none;">
-            <div class="card-header">
-                <h2 class="topic-title">2. Irisan Dua Himpunan (A ∩ B)</h2>
-            </div>
-            <div class="math-box">
-                <b>Notasi Operasi:</b> <span class="math-notation">A ∩ B = {x | x ∈ A dan x ∈ B}</span><br>
-                Irisan dari himpunan A dan B adalah himpunan yang anggotanya berada di <b>A sekaligus berada di B</b>.
-            </div>
-
-            <!-- Interaktif Pemetaan Anggota -->
-            <div class="interactive-section">
-                <p style="font-size: 13.5px; font-weight: 700; color: var(--text-dark);">
-                    Latihan Pemetaan Elementer:<br>
-                    Diketahui: $S = \{1, 2, 3, 4, 5, 6\}$, $A = \{1, 2, 3\}$, $B = \{3, 4, 5\}$.<br>
-                    Petunjuk: Klik angka di bawah, lalu klik wilayah Venn yang sesuai!
-                </p>
-
-                <div class="cards-draggable" id="dragContainer">
-                    <div class="draggable-item" onclick="pickCard(this, '1', 'A')">1</div>
-                    <div class="draggable-item" onclick="pickCard(this, '2', 'A')">2</div>
-                    <div class="draggable-item" onclick="pickCard(this, '3', 'BOTH')">3</div>
-                    <div class="draggable-item" onclick="pickCard(this, '4', 'B')">4</div>
-                    <div class="draggable-item" onclick="pickCard(this, '5', 'B')">5</div>
-                    <div class="draggable-item" onclick="pickCard(this, '6', 'OUT')">6</div>
-                </div>
-
-                <div class="venn-canvas">
-                    <span class="circle-label label-s">S</span>
-                    <span class="circle-label label-a">A</span>
-                    <span class="circle-label label-b">B</span>
-                    <div class="circle circle-left"></div>
-                    <div class="circle circle-right"></div>
-
-                    <div class="drop-zone zone-out" onclick="placeInZone('OUT')" id="z-OUT">Luar</div>
-                    <div class="drop-zone zone-only-a" onclick="placeInZone('A')" id="z-A"></div>
-                    <div class="drop-zone zone-intersect" onclick="placeInZone('BOTH')" id="z-BOTH"><b>A ∩ B</b></div>
-                    <div class="drop-zone zone-only-b" onclick="placeInZone('B')" id="z-B"></div>
-                </div>
-
-                <div class="feedback-box" id="feedback"></div>
-
-                <div class="controls-bar">
-                    <button class="btn-action" onclick="resetInteractive()">🔄 Reset / Coba Lagi</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sub 3: Gabungan -->
-        <div id="sub3" class="content-card tab-pane" style="display:none;">
-            <div class="card-header">
-                <h2 class="topic-title">3. Gabungan Dua Himpunan (A ∪ B)</h2>
-            </div>
-            <div class="math-box">
-                <b>Notasi Operasi:</b> <span class="math-notation">A ∪ B = {x | x ∈ A atau x ∈ B}</span><br>
-                Gabungan dari himpunan A dan B mencakup seluruh elemen yang menjadi anggota A, anggota B, atau anggota kedua-duanya.
-            </div>
-            <p style="font-size: 14px; line-height: 1.6;">
-                <b>Contoh Soal:</b><br>
-                Jika $A = \{a, b, c\}$ dan $B = \{c, d, e\}$, maka:<br>
-                $A \cup B = \{a, b, c, d, e\}$
-            </p>
-        </div>
-
-        <!-- Sub 4: Selisih -->
-        <div id="sub4" class="content-card tab-pane" style="display:none;">
-            <div class="card-header">
-                <h2 class="topic-title">4. Selisih Dua Himpunan (A - B)</h2>
-            </div>
-            <div class="math-box">
-                <b>Notasi Operasi:</b> <span class="math-notation">A - B = {x | x ∈ A dan x ∉ B}</span><br>
-                Selisih himpunan A dan B adalah kumpulan anggota yang murni hanya dimiliki A dan tidak dimiliki oleh B.
-            </div>
-            <p style="font-size: 14px; line-height: 1.6;">
-                <b>Contoh Soal:</b><br>
-                Jika $A = \{1, 2, 3, 4\}$ dan $B = \{3, 4, 5, 6\}$, maka:<br>
-                $A - B = \{1, 2\}$
-            </p>
-        </div>
-
-        <!-- Sub 5: Komplemen -->
-        <div id="sub5" class="content-card tab-pane" style="display:none;">
-            <div class="card-header">
-                <h2 class="topic-title">5. Komplemen Himpunan (Aᶜ)</h2>
-            </div>
-            <div class="math-box">
-                <b>Notasi Operasi:</b> <span class="math-notation">Aᶜ = {x | x ∈ S dan x ∉ A}</span><br>
-                Komplemen himpunan A adalah semua elemen dalam himpunan semesta ($S$) yang bukan merupakan anggota A.
-            </div>
-            <p style="font-size: 14px; line-height: 1.6;">
-                <b>Contoh Soal:</b><br>
-                Jika $S = \{1, 2, 3, 4, 5\}$ dan $A = \{2, 4\}$, maka:<br>
-                $A^c = \{1, 3, 5\}$
-            </p>
-        </div>
-
-        <!-- Quiz Evaluasi 5 Soal -->
-        <div id="quiz" class="content-card tab-pane" style="display:none;">
-            <div class="card-header">
-                <h2 class="topic-title">📝 Bank Latihan Soal Interaktif</h2>
-            </div>
-
-            <!-- Soal 1 -->
-            <div class="quiz-card">
-                <div class="quiz-question">Soal 1: Diketahui $S = \{1, 2, 3, 4, 5, 6, 7\}$, $A = \{2, 3, 5\}$, dan $B = \{1, 3, 5, 7\}$. Berapakah $A ∩ B$?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q1')">A. {1, 2, 3, 5, 7}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true, 'q1')">B. {3, 5}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q1')">C. {2}</div>
-                </div>
-                <div class="feedback-box" id="q1-fb" style="margin-top:10px;"></div>
-            </div>
-
-            <!-- Soal 2 -->
-            <div class="quiz-card">
-                <div class="quiz-question">Soal 2: Berdasarkan himpunan pada Soal 1, berapakah hasil dari $A \cup B$?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, true, 'q2')">A. {1, 2, 3, 5, 7}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q2')">B. {3, 5}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q2')">C. {4, 6}</div>
-                </div>
-                <div class="feedback-box" id="q2-fb" style="margin-top:10px;"></div>
-            </div>
-
-            <!-- Soal 3 -->
-            <div class="quiz-card">
-                <div class="quiz-question">Soal 3: Berdasarkan himpunan pada Soal 1, manakah yang merupakan anggota selisih $A - B$?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q3')">A. {1, 7}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true, 'q3')">B. {2}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q3')">C. {3, 5}</div>
-                </div>
-                <div class="feedback-box" id="q3-fb" style="margin-top:10px;"></div>
-            </div>
-
-            <!-- Soal 4 -->
-            <div class="quiz-card">
-                <div class="quiz-question">Soal 4: Berdasarkan himpunan pada Soal 1, berapakah hasil komplemen dari $(A \cup B)^c$?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, true, 'q4')">A. {4, 6}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q4')">B. {2}</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q4')">C. {1, 2, 3, 5, 7}</div>
-                </div>
-                <div class="feedback-box" id="q4-fb" style="margin-top:10px;"></div>
-            </div>
-
-            <!-- Soal 5 -->
-            <div class="quiz-card">
-                <div class="quiz-question">Soal 5: Jika $n(A) = 10$, $n(B) = 8$, dan $n(A ∩ B) = 3$, berapakah nilai kardinalitas $n(A \cup B)$?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q5')">A. 18</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true, 'q5')">B. 15</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false, 'q5')">C. 11</div>
-                </div>
-                <div class="feedback-box" id="q5-fb" style="margin-top:10px;"></div>
-            </div>
-
-        </div>
-    </main>
-</div>
+<div id="app"></div>
+<dialog id="dlg" aria-label="Daftar tahap">
+  <h2>Pilih tahap</h2>
+  <div id="menuList"></div>
+  <button class="btn sec" id="closeDlg" style="width:100%;margin-top:6px">Tutup</button>
+</dialog>
 
 <script>
-    let activeCard = null;
-    let placedData = {};
+"use strict";
+/* ============ Util ============ */
+const $ = s => document.querySelector(s);
+const shuffle = a => { for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const app = $('#app');
 
-    function switchTab(tabId, element) {
-        document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        
-        document.getElementById(tabId).style.display = 'block';
-        element.classList.add('active');
+/* ============ Geometri Diagram Venn ============ */
+const VB = {ax:190, bx:290, cy:150, r:110};
+const SLOTS = {
+  A:  [[140,108],[140,140],[140,172],[140,204]],
+  AB: [[240,108],[240,140],[240,172],[240,204]],
+  B:  [[342,108],[342,140],[342,172],[342,204]],
+  out:[[50,34],[430,34],[50,268],[430,268],[240,16],[240,284]]
+};
+const ZN = {A:'hanya A', AB:'irisan (A dan B)', B:'hanya B', out:'di luar kedua himpunan'};
+function zoneAt(x,y){
+  if (x<4||x>476||y<4||y>296) return null;
+  const a = Math.hypot(x-VB.ax,y-VB.cy) <= VB.r, b = Math.hypot(x-VB.bx,y-VB.cy) <= VB.r;
+  return a&&b ? 'AB' : a ? 'A' : b ? 'B' : 'out';
+}
+function zoneAtClient(svg,cx,cy){
+  const r = svg.getBoundingClientRect();
+  if (cx<r.left||cx>r.right||cy<r.top||cy>r.bottom) return null;
+  return zoneAt((cx-r.left)*480/r.width, (cy-r.top)*300/r.height);
+}
+const zoneOf = has => { const a=has.includes('A'), b=has.includes('B'); return a&&b?'AB':a?'A':b?'B':'out'; };
+
+let uidc = 0;
+function vennSVG(o={}){
+  const u = ++uidc, {ax,bx,cy,r} = VB;
+  const cA = f => `<circle cx="${ax}" cy="${cy}" r="${r}" ${f}/>`;
+  const cB = f => `<circle cx="${bx}" cy="${cy}" r="${r}" ${f}/>`;
+  const mask = (id,inner) => `<mask id="${id}${u}" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="300"><rect width="480" height="300" fill="#fff"/>${inner}</mask>`;
+  let s = `<svg class="venn" viewBox="0 0 480 300" role="img" aria-label="Diagram Venn dua himpunan, A dan B">
+  <defs>
+    <clipPath id="ca${u}">${cA('')}</clipPath>
+    ${mask('nb', cB('fill="#000"'))}
+    ${mask('na', cA('fill="#000"'))}
+    ${mask('no', cA('fill="#000"')+cB('fill="#000"'))}
+  </defs>
+  <rect x="4" y="4" width="472" height="292" rx="14" fill="#fff" stroke="#c9d2de" stroke-width="2"/>
+  ${cA('fill="#dbe7fb"')}${cB('fill="#fde8c9"')}${cB(`fill="#e3d9f7" clip-path="url(#ca${u})"`)}`;
+  (o.highlights||[]).forEach(h=>{
+    const col = h.cls==='bad' ? 'rgba(192,86,47,.5)' : 'rgba(44,156,104,.55)';
+    if (h.zone==='A') s += cA(`fill="${col}" mask="url(#nb${u})"`);
+    if (h.zone==='B') s += cB(`fill="${col}" mask="url(#na${u})"`);
+    if (h.zone==='AB') s += cB(`fill="${col}" clip-path="url(#ca${u})"`);
+    if (h.zone==='out') s += `<rect x="4" y="4" width="472" height="292" rx="14" fill="${col}" mask="url(#no${u})"/>`;
+  });
+  s += cA('fill="none" stroke="#3b6fd4" stroke-width="3"') + cB('fill="none" stroke="#e08a2b" stroke-width="3"');
+  const la = o.labelA ?? 'A', lb = o.labelB ?? 'B';
+  s += `<text class="lab" x="160" y="64" text-anchor="middle" fill="#2a56ad">A</text><text class="lab" x="320" y="64" text-anchor="middle" fill="#a55f12">B</text>`;
+  if (o.subA) s += `<text class="sub" x="160" y="83" text-anchor="middle" fill="#2a56ad">${o.subA}</text>`;
+  if (o.subB) s += `<text class="sub" x="320" y="83" text-anchor="middle" fill="#a55f12">${o.subB}</text>`;
+  if (o.zoneLabels){
+    s += `<text class="zl" x="140" y="154" text-anchor="middle">hanya A</text>
+          <text class="zl" x="240" y="154" text-anchor="middle">irisan</text>
+          <text class="zl" x="342" y="154" text-anchor="middle">hanya B</text>
+          <text class="zl" x="240" y="288" text-anchor="middle">di luar kedua lingkaran</text>`;
+  }
+  const cnt = {A:0,AB:0,B:0,out:0};
+  (o.placed||[]).forEach(it=>{
+    const sl = SLOTS[it.zone]; const p = sl[Math.min(cnt[it.zone]++, sl.length-1)];
+    const x=p[0], y=p[1];
+    const cls = o.static ? 'chip' : 'placed '+(it.st||'');
+    const attrs = o.static ? '' : ` data-id="${it.id}" tabindex="0" role="button" aria-label="${it.name}. Ketuk untuk memindahkan"`;
+    s += `<g class="${cls}"${attrs}><rect x="${x-34}" y="${y-13}" width="68" height="26" rx="13"/><text class="t" x="${x}" y="${y+5}" text-anchor="middle">${it.name}${it.st==='ok'?' ✓':''}</text></g>`;
+  });
+  return s + '</svg>';
+}
+
+/* ============ Data aktivitas ============ */
+const ACTS = {
+  irisan:{
+    context:'Di kelas 7A, ada siswa yang suka <b>sepak bola</b> dan ada siswa yang suka <b>video game</b>.',
+    A:'Sepak bola', B:'Video game', verb:'suka', nameA:'sepak bola', nameB:'video game',
+    items:[
+      {id:'andi',name:'Andi',has:['A','B']},{id:'budi',name:'Budi',has:['A']},
+      {id:'citra',name:'Citra',has:['B']},{id:'dewi',name:'Dewi',has:['A','B']},
+      {id:'eko',name:'Eko',has:['A']},{id:'fani',name:'Fani',has:[]}],
+    rule:{zones:['AB'],sym:'A ∩ B'},
+    q:{q:'Tentukan siswa yang menyukai <b>keduanya</b> (sepak bola dan video game).',
+       options:['Andi dan Dewi','Budi dan Eko','Citra dan Fani'],answer:0,
+       hint:'Cari siswa yang ada di bagian tengah (irisan).'}
+  },
+  gabungan:{
+    context:'Di kantin sekolah, ada siswa yang membeli <b>bakso</b> dan ada siswa yang membeli <b>es teh</b>.',
+    A:'Bakso', B:'Es teh', verb:'membeli', nameA:'bakso', nameB:'es teh',
+    items:[
+      {id:'gita',name:'Gita',has:['A','B']},{id:'hasan',name:'Hasan',has:['A']},
+      {id:'indah',name:'Indah',has:['B']},{id:'joko',name:'Joko',has:[]},
+      {id:'kiki',name:'Kiki',has:['A']},{id:'lina',name:'Lina',has:['B']}],
+    rule:{zones:['A','AB','B'],sym:'A ∪ B'},
+    q:{q:'Siapa saja yang membeli <b>bakso atau es teh</b> (gabungan)?',
+       options:['Gita, Hasan, Indah, Kiki, Lina','Hanya Gita','Semua siswa, termasuk Joko'],answer:0,
+       hint:'Gabungan = semua yang ada di dalam lingkaran A atau B. Joko ada di luar kedua lingkaran.'}
+  },
+  selisih:{
+    context:'Di sekolah ada ekstrakurikuler <b>Pramuka</b> dan <b>Paskibra</b>. Ada siswa yang ikut salah satu, ada yang ikut keduanya.',
+    A:'Pramuka', B:'Paskibra', verb:'ikut', nameA:'Pramuka', nameB:'Paskibra',
+    items:[
+      {id:'rani',name:'Rani',has:['A','B']},{id:'sandi',name:'Sandi',has:['A']},
+      {id:'tono',name:'Tono',has:['B']},{id:'umar',name:'Umar',has:['A']},
+      {id:'vina',name:'Vina',has:[]},{id:'wati',name:'Wati',has:['A','B']}],
+    rule:{zones:['A'],sym:'A − B'},
+    q:{q:'Siapa yang ikut Pramuka <b>tetapi tidak</b> ikut Paskibra?',
+       options:['Sandi dan Umar','Rani dan Wati','Tono saja'],answer:0,
+       hint:'Cari yang ada di lingkaran A, tetapi bukan di bagian irisan.'}
+  }
+};
+const factTxt = (act,it) => {
+  const p = []; if (it.has.includes('A')) p.push(act.nameA); if (it.has.includes('B')) p.push(act.nameB);
+  return p.length ? `${act.verb} ${p.join(' dan ')}` : `tidak ${act.verb} keduanya`;
+};
+
+/* Diagram Venn contoh bilangan (untuk latihan) */
+const NUMVENN = [1,2,3].map(n=>({id:'n'+n,name:String(n),zone:'A'}))
+  .concat([4,5].map(n=>({id:'n'+n,name:String(n),zone:'AB'})), [6,7].map(n=>({id:'n'+n,name:String(n),zone:'B'})));
+
+/* ============ Daftar tahap ============ */
+const STAGES = [
+ {title:'Mengenal himpunan', recap:'Himpunan adalah kumpulan benda atau hal yang anggotanya jelas.', pages:[
+  {t:'text', title:'Apa itu himpunan?', html:`
+    <p>Himpunan adalah <span class="kw">kumpulan yang anggotanya jelas</span>. Ditulis dengan kurung kurawal { }.</p>
+    <div class="ex good"><b>Contoh himpunan</b><br>Warna bendera Indonesia = {merah, putih}<br>Anggotanya jelas: hanya 2.</div>
+    <div class="ex bad"><b>Bukan himpunan</b><br>Kumpulan siswa yang pintar.<br>Tidak jelas, karena "pintar" bisa berbeda-beda menurut orang.</div>
+    <p class="tip">Tanya dirimu: <b>"Semua orang setuju siapa anggotanya?"</b> Jika ya, itu himpunan.</p>`},
+  {t:'choice', q:'Mana yang merupakan <b>himpunan</b>?', fixed:true,
+   options:['Kumpulan siswa kelas 7A','Kumpulan makanan yang enak'], answer:0,
+   hint:'"Enak" menurut tiap orang berbeda. Mana yang anggotanya pasti?',
+   explain:'Siswa kelas 7A jelas daftarnya, sedangkan "enak" tidak jelas.'},
+  {t:'choice', q:'Mana yang <b>bukan</b> himpunan?',
+   options:['Kumpulan bilangan genap kurang dari 10','Kumpulan lagu yang bagus','Kumpulan hari dalam seminggu'], answer:1,
+   hint:'Cari yang ukurannya "bagus" tergantung selera.',
+   explain:'"Bagus" tidak jelas ukurannya, jadi anggotanya tidak pasti.'}
+ ]},
+ {title:'Anggota dan bukan anggota', recap:'Simbol ∈ berarti "anggota dari", dan ∉ berarti "bukan anggota dari".', pages:[
+  {t:'text', title:'Anggota himpunan', html:`
+    <p>Misalkan himpunan <b>P</b> berisi bilangan genap kecil:</p>
+    <div class="math">P = {2, 4, 6, 8}</div>
+    <div class="ex good"><b>2 adalah anggota P</b><br>ditulis <b>2 ∈ P</b></div>
+    <div class="ex bad"><b>5 bukan anggota P</b><br>ditulis <b>5 ∉ P</b></div>
+    <p class="tip">∈ dibaca "anggota dari". ∉ adalah ∈ yang dicoret, artinya "bukan anggota".</p>`},
+  {t:'choice', q:'Apakah 6 anggota dari P = {2, 4, 6, 8}?', fixed:true,
+   options:['Ya, 6 ∈ P','Bukan, 6 ∉ P'], answer:0,
+   hint:'Cari angka 6 di dalam kurung kurawal.', explain:'6 ada di dalam P, jadi 6 ∈ P.'},
+  {t:'choice', q:'Mana penulisan yang benar untuk P = {2, 4, 6, 8}?',
+   options:['5 ∈ P','5 ∉ P','8 ∉ P'], answer:1,
+   hint:'Angka 5 tidak ada di P. Simbol apa yang artinya "bukan anggota"?', explain:'5 tidak ada di P, jadi 5 ∉ P.'}
+ ]},
+ {title:'Mengenal Diagram Venn', rest:true, recap:'Diagram Venn punya 4 bagian: hanya A, irisan, hanya B, dan di luar kedua lingkaran.', pages:[
+  {t:'text', title:'Diagram Venn', html:`
+    <p>Diagram Venn menggambarkan himpunan dengan <span class="kw">lingkaran</span>. Dua lingkaran membuat <b>4 bagian</b>:</p>`,
+   venn:{zoneLabels:true}, after:`
+    <p style="margin-top:8px">Persegi panjang di sekeliling adalah <b>semesta</b>, yaitu semua hal yang sedang dibicarakan.</p>`},
+  {t:'zonequiz', prompts:[
+    {zone:'A', text:'Tekan bagian yang <b>hanya</b> milik himpunan A.'},
+    {zone:'AB', text:'Tekan bagian <b>irisan</b>, yaitu bagian yang ada di A <b>dan</b> di B.'},
+    {zone:'B', text:'Tekan bagian yang <b>hanya</b> milik himpunan B.'},
+    {zone:'out', text:'Tekan bagian <b>di luar</b> kedua lingkaran.'}]}
+ ]},
+ {title:'Menentukan irisan', recap:'Irisan (A ∩ B) adalah anggota yang ada di A dan juga di B.', pages:[
+  {t:'text', title:'Irisan (A ∩ B)', html:`
+    <p>Irisan adalah anggota yang ada di A <span class="kw">dan</span> juga di B.</p>
+    <p class="tip">Kata kunci: <b>"keduanya"</b> atau <b>"dan"</b>.</p>
+    <div class="math">A = {1, 2, 3} &nbsp; B = {2, 3, 4}<br>A ∩ B = {2, 3}</div>
+    <p>Bagian yang diwarnai hijau adalah irisan:</p>`,
+   venn:{highlights:[{zone:'AB'}]}},
+  {t:'venn', act:'irisan'}
+ ]},
+ {title:'Menentukan gabungan', recap:'Gabungan (A ∪ B) adalah semua anggota A atau B. Anggota yang sama ditulis sekali.', pages:[
+  {t:'text', title:'Gabungan (A ∪ B)', html:`
+    <p>Gabungan adalah semua anggota yang ada di A <span class="kw">atau</span> di B (atau di keduanya).</p>
+    <p class="tip">Kata kunci: <b>"atau"</b>. Anggota yang sama cukup ditulis satu kali.</p>
+    <div class="math">A = {1, 2, 3} &nbsp; B = {3, 4}<br>A ∪ B = {1, 2, 3, 4}</div>
+    <p>Semua bagian hijau (isi kedua lingkaran) adalah gabungan:</p>`,
+   venn:{highlights:[{zone:'A'},{zone:'AB'},{zone:'B'}]}},
+  {t:'venn', act:'gabungan'}
+ ]},
+ {title:'Menentukan selisih', rest:true, recap:'Selisih (A − B) adalah anggota A yang tidak ada di B.', pages:[
+  {t:'text', title:'Selisih (A − B)', html:`
+    <p>Selisih A − B adalah anggota A <span class="kw">tetapi tidak</span> ada di B.</p>
+    <p class="tip">Kata kunci: <b>"tetapi tidak"</b>. Urutannya penting, jadi A − B berbeda dengan B − A.</p>
+    <div class="math">A = {1, 2, 3} &nbsp; B = {3, 4}<br>A − B = {1, 2}</div>
+    <p>Bagian hijau adalah A − B (lingkaran A tanpa irisan):</p>`,
+   venn:{highlights:[{zone:'A'}]}},
+  {t:'venn', act:'selisih'}
+ ]},
+ {title:'Latihan dan refleksi', pages:[
+  {t:'text', title:'Latihan', html:`
+    <p>Saatnya latihan! Ada <b>5 soal</b>. Tidak perlu buru-buru, dan kamu boleh mencoba lagi.</p>
+    <div class="math">A = {1, 2, 3, 4, 5}<br>B = {4, 5, 6, 7}</div>
+    <p>Gambarnya akan selalu ada untuk membantumu.</p>`, venn:{placed:NUMVENN, static:true}},
+  {t:'choice', practice:true, venn:true, q:'<b>A ∩ B</b> (irisan) = ...', options:['{4, 5}','{1, 2, 3, 4, 5, 6, 7}','{1, 2, 3}'], answer:0,
+   hint:'Irisan = yang ada di A dan di B (bagian tengah).', explain:'4 dan 5 ada di kedua himpunan.'},
+  {t:'choice', practice:true, venn:true, q:'<b>A ∪ B</b> (gabungan) = ...', options:['{4, 5}','{1, 2, 3, 4, 5, 6, 7}','{1, 2, 3, 6, 7}'], answer:1,
+   hint:'Gabungan = semua isi lingkaran A atau B. Angka yang sama ditulis sekali.', explain:'Semua angka di kedua lingkaran, 4 dan 5 hanya ditulis sekali.'},
+  {t:'choice', practice:true, venn:true, q:'<b>A − B</b> (selisih) = ...', options:['{6, 7}','{4, 5}','{1, 2, 3}'], answer:2,
+   hint:'A − B = anggota A yang tidak ada di B.', explain:'1, 2, 3 ada di A tetapi tidak di B.'},
+  {t:'choice', practice:true, venn:true, q:'<b>B − A</b> = ...', options:['{6, 7}','{1, 2, 3}','{4, 5}'], answer:0,
+   hint:'Sekarang yang dicari: anggota B yang tidak ada di A.', explain:'6 dan 7 ada di B tetapi tidak di A.'},
+  {t:'choice', practice:true, q:'Sari suka sepak bola (A) <b>tetapi tidak</b> suka video game (B). Kartu Sari ada di bagian ...',
+   options:['Irisan (A ∩ B)','Hanya A','Di luar kedua lingkaran'], answer:1,
+   hint:'Sari ada di lingkaran A, tetapi tidak di bagian yang bertumpuk dengan B.', explain:'Sari hanya ada di A.'},
+  {t:'reflect'},
+  {t:'finish'}
+ ]}
+];
+STAGES.forEach((s,i)=>{ if(i<STAGES.length-1) s.pages.push({t:'done'}); });
+const TOPICS = ['Mengenal himpunan','Anggota dan bukan anggota','Diagram Venn','Irisan','Gabungan','Selisih'];
+
+/* ============ State ============ */
+const S = {view:'home', stage:0, page:0, completed:new Set(), doneStages:new Set(), practice:{}, reflect:{}};
+const keyOf = () => S.stage+'.'+S.page;
+const needsDone = p => ['choice','zonequiz','venn','reflect'].includes(p.t);
+
+function go(stage,page){ S.stage=stage; S.page=page; S.view='stage'; render(); window.scrollTo(0,0); }
+function markDone(key){ S.completed.add(key); updateNav(); }
+
+/* ============ Render utama ============ */
+function render(){ S.view==='home' ? renderHome() : renderStage(); }
+
+function renderHome(){
+  app.innerHTML = `
+  <div class="home">
+    <svg viewBox="0 0 160 100" width="170" height="106" style="margin:0 auto 10px" aria-hidden="true">
+      <defs><clipPath id="hc"><circle cx="62" cy="50" r="38"/></clipPath></defs>
+      <circle cx="62" cy="50" r="38" fill="#dbe7fb" stroke="#3b6fd4" stroke-width="3"/>
+      <circle cx="98" cy="50" r="38" fill="#fde8c9" stroke="#e08a2b" stroke-width="3"/>
+      <circle cx="98" cy="50" r="38" fill="#e3d9f7" clip-path="url(#hc)"/>
+      <circle cx="62" cy="50" r="38" fill="none" stroke="#3b6fd4" stroke-width="3"/>
+      <circle cx="98" cy="50" r="38" fill="none" stroke="#e08a2b" stroke-width="3"/>
+    </svg>
+    <h1 style="color:var(--blue)">VennFocus</h1>
+    <p class="muted" style="font-size:1.1rem;margin:0">Belajar <b>Himpunan</b> dengan Diagram Venn</p>
+    <ul>
+      <li>7 tahap kecil, satu langkah satu waktu</li>
+      <li>Langsung tahu jawabanmu benar atau belum</li>
+      <li>Boleh diulang kapan saja, sesuai kecepatanmu</li>
+    </ul>
+    <button class="btn pri" id="start">Mulai Belajar</button>
+    <button class="btn sec" id="pick">Pilih tahap</button>
+    <p class="small">Media pembelajaran matematika inklusif · Kelas VII</p>
+  </div>`;
+  $('#start').onclick = () => go(0,0);
+  $('#pick').onclick = openMenu;
+}
+
+function renderStage(){
+  const st = STAGES[S.stage], pg = st.pages[S.page];
+  const steps = st.pages.filter(p=>p.t!=='done'&&p.t!=='finish').length;
+  const stepTxt = (pg.t==='done'||pg.t==='finish') ? 'Selesai ✓' : `Langkah ${S.page+1} dari ${steps}`;
+  app.innerHTML = `
+  <header class="top">
+    <button class="brand" id="btnHome" aria-label="Kembali ke halaman awal">VennFocus</button>
+    <button class="ghost" id="btnMenu">☰ Tahap</button>
+  </header>
+  <div class="prog" role="progressbar" aria-valuemin="1" aria-valuemax="7" aria-valuenow="${S.stage+1}">
+    ${STAGES.map((_,i)=>`<i class="${S.doneStages.has(i)?'done':''} ${i===S.stage?'cur':''}"></i>`).join('')}
+  </div>
+  <p class="where"><span><b>Tahap ${S.stage+1} dari 7</b> · ${st.title}</span><span>${stepTxt}</span></p>
+  <main class="page" id="page" tabindex="-1"></main>
+  <nav class="nav"><button class="btn sec" id="back">← Kembali</button><button class="btn pri" id="next">Lanjut →</button></nav>`;
+  $('#btnHome').onclick = () => { S.view='home'; render(); };
+  $('#btnMenu').onclick = openMenu;
+  $('#back').onclick = () => {
+    if (S.page>0) go(S.stage,S.page-1);
+    else if (S.stage>0) go(S.stage-1, STAGES[S.stage-1].pages.length-1);
+    else { S.view='home'; render(); }
+  };
+  $('#next').onclick = () => {
+    const p = STAGES[S.stage].pages[S.page];
+    if (p.t==='finish') { S.view='home'; render(); return; }
+    if (p.t==='done') { go(S.stage+1,0); return; }
+    go(S.stage,S.page+1);
+  };
+  renderPage();
+  updateNav();
+}
+
+function updateNav(){
+  const st = STAGES[S.stage], pg = st.pages[S.page];
+  const next = $('#next'); if (!next) return;
+  next.textContent = pg.t==='done' ? `Lanjut ke Tahap ${S.stage+2} →` : pg.t==='finish' ? 'Kembali ke awal' : 'Lanjut →';
+  const locked = needsDone(pg) && !S.completed.has(keyOf());
+  next.disabled = locked;
+  next.title = locked ? 'Selesaikan langkah ini dulu ya' : '';
+}
+
+function renderPage(){
+  const el = $('#page'), st = STAGES[S.stage], pg = st.pages[S.page], key = keyOf();
+  switch(pg.t){
+    case 'text':
+      el.innerHTML = `<h2>${pg.title}</h2>${pg.html}${pg.venn?vennSVG(pg.venn):''}${pg.after||''}`;
+      break;
+    case 'choice': {
+      el.innerHTML = `${pg.practice?`<p class="muted" style="margin-bottom:4px">Soal ${S.page} dari 5</p>`:''}${pg.venn?vennSVG({placed:NUMVENN,static:true}):''}<div id="ch"></div>`;
+      renderChoice($('#ch'), pg, {onCorrect:first=>{
+        if (pg.practice && S.practice[key]===undefined) S.practice[key]=first;
+        markDone(key);
+      }});
+      break; }
+    case 'zonequiz': renderZoneQuiz(el,pg,key); break;
+    case 'venn': renderVenn(el,ACTS[pg.act],key); break;
+    case 'reflect': renderReflect(el,key); break;
+    case 'finish': renderFinish(el); break;
+    case 'done':
+      S.doneStages.add(S.stage);
+      el.innerHTML = `<div class="donebox"><div class="big">✓</div>
+        <h2>Tahap ${S.stage+1} selesai!</h2>
+        <p>${st.recap}</p>
+        ${st.rest?'<p class="tip">Mau minum atau meregangkan badan sebentar? Boleh. Lanjut kalau sudah siap.</p>':''}
+        <button class="btn sec" id="again">↻ Ulangi tahap ini</button></div>`;
+      $('#again').onclick = () => go(S.stage,0);
+      const segs = document.querySelectorAll('.prog i'); if (segs[S.stage]) segs[S.stage].className='done cur';
+      break;
+  }
+  el.focus({preventScroll:true});
+}
+
+/* ============ Pilihan ganda ============ */
+function renderChoice(el,spec,o={}){
+  const order = spec.options.map((_,i)=>i); if (!spec.fixed) shuffle(order);
+  let tries = 0, finished = false;
+  el.innerHTML = `<p class="q">${spec.q}</p>
+    <div class="opts">${order.map(i=>`<button class="opt" data-i="${i}">${spec.options[i]}</button>`).join('')}</div>
+    <div class="fb" role="status" aria-live="polite"></div>`;
+  const fb = el.querySelector('.fb');
+  el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if (finished) return; const i = +b.dataset.i;
+    if (i===spec.answer){
+      finished = true; b.classList.add('right');
+      el.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+      fb.className = 'fb good';
+      fb.innerHTML = '✓ <b>Tepat!</b> ' + (typeof spec.explain==='function' ? spec.explain() : (spec.explain||''));
+      o.onCorrect && o.onCorrect(tries===0);
+    } else {
+      tries++; b.classList.add('wrong'); b.disabled = true;
+      fb.className = 'fb try';
+      fb.innerHTML = 'Belum tepat, coba lagi. <b>Petunjuk:</b> ' + spec.hint;
     }
+  });
+}
 
-    function pickCard(el, val, correctZone) {
-        document.querySelectorAll('.draggable-item').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        activeCard = { el, val, correctZone };
+/* ============ Kuis bagian Diagram Venn ============ */
+function renderZoneQuiz(el,pg,key){
+  const prompts = shuffle(pg.prompts.slice());
+  let i = 0, solved = false, tries = 0, hl = [], msg = '', msgCls = '';
+  function draw(){
+    const p = prompts[i], last = i===prompts.length-1;
+    el.innerHTML = `<p class="muted" style="margin-bottom:4px">Pertanyaan ${i+1} dari ${prompts.length}</p>
+      <p class="q">${p.text}</p>
+      ${vennSVG({highlights:hl})}
+      ${solved?'':`<p class="lbl">Atau pilih lewat tombol:</p>
+      <div class="zbtns">${['A','AB','B','out'].map(z=>`<button class="btn sec" data-z="${z}">${ZN[z][0].toUpperCase()+ZN[z].slice(1)}</button>`).join('')}</div>`}
+      <div class="fb ${msgCls}" role="status" aria-live="polite">${msg}</div>
+      ${solved&&!last?'<button class="btn pri" id="nq" style="width:100%;margin-top:12px">Pertanyaan berikutnya →</button>':''}`;
+    el.querySelector('svg.venn').onclick = e => { if(!solved) answer(zoneAtClient(e.currentTarget,e.clientX,e.clientY)); };
+    el.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>answer(b.dataset.z));
+    const nq = el.querySelector('#nq'); if (nq) nq.onclick = () => { i++; solved=false; tries=0; hl=[]; msg=''; msgCls=''; draw(); };
+  }
+  function answer(z){
+    if (!z||solved) return;
+    const p = prompts[i], last = i===prompts.length-1;
+    if (z===p.zone){
+      solved = true; hl = [{zone:z}]; msgCls = 'good';
+      msg = `✓ <b>Tepat!</b> Itu bagian ${ZN[z]}.` + (last ? ' Semua pertanyaan sudah benar. Hebat!' : '');
+      if (last) markDone(key);
+    } else {
+      tries++; hl = [{zone:z,cls:'bad'}]; msgCls = 'try';
+      msg = `Yang kamu tekan adalah bagian <b>${ZN[z]}</b>. Belum tepat, coba lagi.` +
+        (tries>=2 ? ` <b>Petunjuk:</b> cari bagian ${ZN[p.zone]}.` : '');
     }
+    draw();
+  }
+  draw();
+}
 
-    function placeInZone(zone) {
-        if (!activeCard) return;
+/* ============ Aktivitas kartu anggota + Diagram Venn ============ */
+function renderVenn(el,act,key){
+  const items = act.items.map(it=>({...it, zone:zoneOf(it.has)}));
+  let placed = {}, sel = null, tries = 0, status = {}, phase = 1, msg = '', msgCls = '';
 
-        placedData[activeCard.val] = (zone === activeCard.correctZone);
+  function draw(){
+    const allPlaced = items.every(i=>placed[i.id]);
+    const chipsArr = items.filter(i=>placed[i.id]).map(i=>({
+      id:i.id, name:i.name, zone:placed[i.id],
+      st: status[i.id]===undefined ? '' : status[i.id] ? 'ok' : 'bad'}));
+    const tray = items.filter(i=>!placed[i.id]);
+    const selItem = items.find(i=>i.id===sel);
+    el.innerHTML = `
+      <p class="ctx">${act.context}</p>
+      <div class="legend"><span><span class="dot a"></span><b>A</b> = ${act.A}</span><span><span class="dot b"></span><b>B</b> = ${act.B}</span></div>
+      ${phase===1?`<p class="lbl">${selItem?`Kartu dipilih: <b>${selItem.name}</b>. Sekarang ketuk bagian diagram.`:'Langkah: ketuk satu kartu, lalu ketuk bagian diagram. Kartu juga bisa digeser.'}</p>`:''}
+      ${vennSVG({placed:chipsArr, subA:act.A, subB:act.B})}
+      ${phase===1?`
+        <p class="lbl">Atau taruh kartu lewat tombol:</p>
+        <div class="zbtns">${['A','AB','B','out'].map(z=>`<button class="btn sec" data-z="${z}" ${sel?'':'disabled'}>${ZN[z][0].toUpperCase()+ZN[z].slice(1)}</button>`).join('')}</div>
+        <p class="lbl">Kartu anggota (${tray.length} tersisa):</p>
+        <div class="tray" id="tray">${tray.length?tray.map(i=>`<button class="card ${sel===i.id?'sel':''}" data-id="${i.id}"><b>${i.name}</b><small>${factTxt(act,i)}</small></button>`).join(''):'<span class="muted">Semua kartu sudah ditaruh. Tekan "Periksa jawabanku".</span>'}</div>
+        <div class="row"><button class="btn pri" id="chk" ${allPlaced?'':'disabled'}>Periksa jawabanku</button><button class="btn sec" id="rst">Ulangi</button></div>`:''}
+      <div class="fb ${msgCls}" role="status" aria-live="polite">${msg}</div>
+      ${phase===2?'<div id="q2" style="margin-top:14px"></div>':''}`;
+    bind(); if (phase===2) askQuestion();
+  }
 
-        const targetZone = document.getElementById(`z-${zone}`);
-        const tag = document.createElement('span');
-        tag.className = 'placed-tag';
-        tag.innerText = activeCard.val;
-        targetZone.appendChild(tag);
+  function place(id,zone){ placed[id]=zone; delete status[id]; sel=null; msg=''; msgCls=''; draw(); }
 
-        activeCard.el.style.visibility = 'hidden';
-        activeCard = null;
+  function bind(){
+    if (phase!==1) return;
+    const svg = el.querySelector('svg.venn');
+    const unplace = id => { delete placed[id]; delete status[id]; sel=id; msg=''; msgCls=''; draw(); };
+    svg.onclick = e => {
+      const g = e.target.closest('.placed');
+      if (g) return unplace(g.dataset.id);
+      if (!sel){ msg='Pilih dulu salah satu kartu di bawah diagram.'; msgCls='info'; return draw(); }
+      const z = zoneAtClient(svg,e.clientX,e.clientY); if (z) place(sel,z);
+    };
+    svg.onkeydown = e => { if ((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('placed')){ e.preventDefault(); unplace(e.target.dataset.id); } };
+    el.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>{ if(sel) place(sel,b.dataset.z); });
+    const tray = el.querySelector('#tray');
+    if (tray) tray.addEventListener('pointerdown', onDown);
+    const chk = el.querySelector('#chk'); if (chk) chk.onclick = check;
+    const rst = el.querySelector('#rst'); if (rst) rst.onclick = () => { placed={}; status={}; sel=null; tries=0; msg=''; msgCls=''; draw(); };
+    const rev = el.querySelector('#rev'); if (rev) rev.onclick = reveal;
+  }
 
-        verifyStatus();
+  function onDown(e){
+    const c = e.target.closest('.card[data-id]'); if (!c) return;
+    const id = c.dataset.id, sx = e.clientX, sy = e.clientY;
+    let ghost = null, moved = false;
+    const mv = ev => {
+      if (!moved && Math.hypot(ev.clientX-sx, ev.clientY-sy) > 8){
+        moved = true; ghost = c.cloneNode(true); ghost.classList.add('ghost-card'); document.body.appendChild(ghost); c.classList.add('dragging');
+      }
+      if (ghost){ ghost.style.left = ev.clientX+'px'; ghost.style.top = ev.clientY+'px'; ev.preventDefault(); }
+    };
+    const cleanup = () => { document.removeEventListener('pointermove',mv); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',cancel); };
+    const up = ev => {
+      cleanup();
+      if (ghost){
+        ghost.remove();
+        const z = zoneAtClient(el.querySelector('svg.venn'), ev.clientX, ev.clientY);
+        if (z) place(id,z); else c.classList.remove('dragging');
+      } else { sel = (sel===id) ? null : id; msg=''; msgCls=''; draw(); }
+    };
+    const cancel = () => { cleanup(); if (ghost) ghost.remove(); c.classList.remove('dragging'); };
+    document.addEventListener('pointermove',mv,{passive:false});
+    document.addEventListener('pointerup',up);
+    document.addEventListener('pointercancel',cancel);
+  }
+
+  function check(){
+    tries++; status = {}; const bad = [];
+    items.forEach(it=>{ const ok = placed[it.id]===it.zone; status[it.id]=ok; if(!ok) bad.push(it); });
+    if (!bad.length){
+      phase = 2; msgCls = 'good'; msg = '✓ <b>Semua kartu sudah tepat!</b> Tinggal satu pertanyaan lagi.';
+    } else {
+      msgCls = 'try';
+      msg = `<b>${bad.length} kartu perlu diperbaiki</b> (ditandai merah). Ketuk kartu merah di diagram untuk memindahkannya.<ul>` +
+        bad.map(it=>`<li>${it.name} ${factTxt(act,it)}. Ada di himpunan mana saja?</li>`).join('') + '</ul>' +
+        (tries>=2 ? '<button class="btn sec" id="rev" style="margin-top:10px;width:100%">Tunjukkan jawabannya</button>' : '');
     }
+    draw();
+  }
+  function reveal(){
+    items.forEach(it=>{ placed[it.id]=it.zone; status[it.id]=true; });
+    phase = 2; msgCls = 'info'; msg = 'Sudah dibetulkan. Perhatikan letak tiap kartu, lalu jawab pertanyaan berikut.';
+    draw();
+  }
+  function askQuestion(){
+    const names = items.filter(i=>act.rule.zones.includes(i.zone)).map(i=>i.name);
+    renderChoice(el.querySelector('#q2'), {
+      ...act.q,
+      explain: () => `<b>${act.rule.sym} = {${names.join(', ')}}</b>`
+    }, {onCorrect:()=>markDone(key)});
+  }
+  draw();
+}
 
-    function verifyStatus() {
-        const feedback = document.getElementById('feedback');
-        const keys = Object.keys(placedData);
-        if (keys.length === 6) {
-            const allCorrect = Object.values(placedData).every(v => v === true);
-            if (allCorrect) {
-                feedback.className = 'feedback-box correct';
-                feedback.innerText = '🎉 Tepat sekali! Seluruh posisi elemen pada Diagram Venn sudah benar.';
-            } else {
-                feedback.className = 'feedback-box error';
-                feedback.innerText = '⚠️ Terdapat penempatan posisi elemen yang salah. Silakan tekan Reset.';
-            }
-        }
-    }
+/* ============ Refleksi & penutup ============ */
+function renderReflect(el,key){
+  const topicOpts = TOPICS.map((t,i)=>[String(i),t]);
+  const Q = [
+    {k:'easy', q:'Bagian mana yang paling mudah buatmu?', opts:topicOpts},
+    {k:'hard', q:'Bagian mana yang masih membingungkan?', opts:topicOpts.concat([['none','Tidak ada, sudah paham semua']])},
+    {k:'diff', q:'Apakah kamu sudah dapat membedakan irisan dan gabungan?', opts:[['yes','Sudah'],['almost','Hampir'],['no','Belum']]}
+  ];
+  el.innerHTML = `<h2>Refleksi singkat</h2><p class="muted">Tidak ada jawaban benar atau salah. Jawab sesuai yang kamu rasakan.</p>` +
+    Q.map(q=>`<fieldset><legend>${q.q}</legend><div class="chips">${q.opts.map(([v,l])=>`<button class="chip-btn ${S.reflect[q.k]===v?'on':''}" data-k="${q.k}" data-v="${v}">${l}</button>`).join('')}</div></fieldset>`).join('');
+  const check = () => { if (Q.every(q=>S.reflect[q.k]!==undefined)) markDone(key); };
+  el.querySelectorAll('.chip-btn').forEach(b=>b.onclick=()=>{
+    S.reflect[b.dataset.k] = b.dataset.v;
+    el.querySelectorAll(`[data-k="${b.dataset.k}"]`).forEach(x=>x.classList.toggle('on',x===b));
+    check();
+  });
+  check();
+}
 
-    function resetInteractive() {
-        activeCard = null;
-        placedData = {};
-        document.querySelectorAll('.placed-tag').forEach(t => t.remove());
-        document.querySelectorAll('.draggable-item').forEach(c => {
-            c.style.visibility = 'visible';
-            c.classList.remove('selected');
-        });
-        const feedback = document.getElementById('feedback');
-        feedback.className = 'feedback-box';
-        feedback.innerText = '';
-    }
+function renderFinish(el){
+  const ok = Object.values(S.practice).filter(Boolean).length;
+  const r = S.reflect;
+  const hardIdx = (r.hard!==undefined && r.hard!=='none') ? +r.hard : null;
+  const diffMsg = {
+    yes:'Hebat! Kamu sudah bisa membedakan irisan dan gabungan.',
+    almost:'Sedikit lagi! Ingat saja kata kuncinya di bawah.',
+    no:'Tidak apa-apa, itu wajar. Coba ulangi tahap Irisan dan Gabungan pelan-pelan.'}[r.diff] || '';
+  el.innerHTML = `<div class="donebox"><div class="big">★</div><h2>Kamu sudah sampai di akhir!</h2></div>
+    <div class="ex good"><b>Latihan:</b> ${ok} dari 5 soal benar pada percobaan pertama.</div>
+    ${r.easy!==undefined?`<p>Bagian yang paling mudah: <b>${TOPICS[+r.easy]}</b>.</p>`:''}
+    ${hardIdx!==null?`<p>Bagian yang masih membingungkan: <b>${TOPICS[hardIdx]}</b>.</p><button class="btn sec" id="rep" style="width:100%;margin-bottom:12px">↻ Ulangi tahap ${TOPICS[hardIdx]}</button>`:'<p>Kamu merasa semua bagian sudah dipahami. Keren!</p>'}
+    <p>${diffMsg}</p>
+    <div class="ex info"><b>Ingat kata kuncinya</b><br>
+      <b>Irisan (∩)</b> = <b>dan</b> / keduanya<br>
+      <b>Gabungan (∪)</b> = <b>atau</b> / semua isi lingkaran<br>
+      <b>Selisih (A − B)</b> = A <b>tetapi tidak</b> B</div>
+    <p class="muted">Kamu boleh mengulang tahap mana pun lewat tombol "☰ Tahap".</p>`;
+  const rep = $('#rep'); if (rep) rep.onclick = () => go(hardIdx,0);
+}
 
-    function checkQuiz(element, isCorrect, targetId) {
-        const fb = document.getElementById(`${targetId}-fb`);
-        if (isCorrect) {
-            fb.className = 'feedback-box correct';
-            fb.innerText = '✨ Tepat Sekali!';
-        } else {
-            fb.className = 'feedback-box error';
-            fb.innerText = '❌ Jawaban kurang tepat. Perhatikan kembali definisi opsinya.';
-        }
-    }
+/* ============ Menu tahap ============ */
+function openMenu(){
+  const list = $('#menuList');
+  list.innerHTML = STAGES.map((s,i)=>`<button class="mitem ${S.doneStages.has(i)?'ok':''} ${S.view==='stage'&&S.stage===i?'cur':''}" data-i="${i}"><span class="n">${S.doneStages.has(i)?'✓':i+1}</span><span>${s.title}</span></button>`).join('');
+  list.querySelectorAll('.mitem').forEach(b=>b.onclick=()=>{ $('#dlg').close(); go(+b.dataset.i,0); });
+  $('#dlg').showModal();
+}
+$('#closeDlg').onclick = () => $('#dlg').close();
+
+render();
 </script>
-
 </body>
 </html>
