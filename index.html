@@ -3,41 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VennFocus - Pembelajaran Himpunan Inklusif</title>
+    <title>VennFocus - Media Digital Himpunan Inklusif</title>
     <style>
+        :root {
+            --bg-color: #f0f7f9;
+            --card-bg: #ffffff;
+            --primary: #3a86ff;
+            --primary-hover: #2563eb;
+            --secondary: #00b4d8;
+            --accent: #ff006e;
+            --text-main: #2b2d42;
+            --text-sub: #5c677d;
+            --set-a: rgba(255, 179, 198, 0.55);
+            --set-b: rgba(144, 224, 239, 0.55);
+            --correct: #38b000;
+            --error: #e63946;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f8fb;
-            color: #333;
-            text-align: center;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 12px;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+        header {
+            text-align: center;
+            margin-bottom: 16px;
         }
-        h1 { color: #2c3e50; }
-        .btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 16px;
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background: #e9ecef;
+            height: 10px;
+            border-radius: 10px;
+            margin: 14px 0 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 14%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .step-badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        p.description {
+            font-size: 14px;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            padding: 12px 14px;
             border-radius: 8px;
+            font-size: 13.5px;
+            color: #334155;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* Interactive Venn Diagram Styling */
+        .venn-wrapper {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .venn-circle {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            top: 40px;
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .circle-a {
+            left: 50px;
+            background: var(--set-a);
+            border: 2px solid #ff4d6d;
+            color: #a4133c;
+        }
+
+        .circle-b {
+            right: 50px;
+            background: var(--set-b);
+            border: 2px solid #0096c7;
+            color: #03045e;
+            justify-content: flex-end;
+        }
+
+        .venn-zone {
+            position: absolute;
             cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 6px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .zone-only-a { top: 70px; left: 60px; width: 70px; height: 100px; }
+        .zone-intersection { top: 70px; left: 180px; width: 120px; height: 100px; z-index: 5; }
+        .zone-only-b { top: 70px; right: 60px; width: 70px; height: 100px; }
+        .zone-outside { top: 6px; left: 6px; right: 6px; height: 35px; }
+
+        .venn-zone:hover {
+            background: rgba(58, 134, 255, 0.15);
+        }
+
+        /* Card Selector */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+            justify-content: center;
+        }
+
+        .item-card {
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .item-card.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .item-card.placed {
+            font-size: 11px;
+            padding: 3px 7px;
+            border-radius: 6px;
+            background: #ffffff;
+            border: 1px solid #94a3b8;
+        }
+
+        /* Feedback styling */
+        .feedback-box {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+
+        .feedback-box.incorrect {
+            display: block;
+            background: #ffe4e6;
+            color: #b91c1c;
+            border: 1px solid #fecdd3;
+        }
+
+        /* Reflection styling */
+        .reflection-option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 13.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reflection-option:hover {
+            border-color: var(--primary);
+            background: #f0f7ff;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
             margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-prev {
+            background: #f1f5f9;
+            color: var(--text-sub);
+        }
+
+        .btn-prev:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-next:hover {
+            background: var(--primary-hover);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>VennFocus</h1>
-        <p>Media Digital Interaktif Himpunan untuk Siswa ADHD</p>
-        <button class="btn" onclick="alert('Selamat belajar!')">Mulai Belajar</button>
+
+<div class="app-container">
+    <div>
+        <header>
+            <div class="logo-title">VennFocus</div>
+            <div class="subtitle">Media Pembelajaran Himpunan Interaktif</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </header>
+
+        <!-- TAHAP 1 -->
+        <div class="step-content active" id="step1">
+            <span class="step-badge">Tahap 1 dari 7</span>
+            <h2>Mengenal Himpunan</h2>
+            <p class="description">Himpunan adalah kumpulan objek atau benda yang terdefinisi dengan jelas.</p>
+            
+            <div class="info-box">
+                <b>Contoh Kontekstual:</b><br>
+                Di kelas SMP, kita mengelompokkan siswa berdasarkan hobinya. 
+                <br>• <b>Himpunan A</b> = Siswa yang menyukai ⚽ Sepak Bola.
+                <br>• <b>Himpunan B</b> = Siswa yang menyukai 🎮 Permainan Video (Game).
+            </div>
+
+            <p class="description">Mari kita lihat nama-nama siswa berikut: <b>Budi, Andi, Citra, Denis, Eka</b>.</p>
+        </div>
+
+        <!-- TAHAP 2 -->
+        <div class="step-content" id="step2">
+            <span class="step-badge">Tahap 2 dari 7</span>
+            <h2>Anggota & Bukan Anggota</h2>
+            <p class="description">Objek di dalam himpunan disebut <b>anggota</b> (ditulis dengan simbol ∈).</p>
+            
+            <div class="info-box">
+                <b>Data Hobi Siswa:</b><br>
+                • Budi: Suka Sepak Bola saja<br>
+                • Andi: Suka Game saja<br>
+                • Citra: Suka Sepak Bola <b>DAN</b> Game<br>
+                • Denis: Suka Sepak Bola saja<br>
+                • Eka: Tidak suka keduanya (Suka Membaca)
+            </div>
+            <p class="description">Artinya, Citra adalah anggota himpunan Sepak Bola sekaligus Game!</p>
+        </div>
+
+        <!-- TAHAP 3 -->
+        <div class="step-content" id="step3">
+            <span class="step-badge">Tahap 3 dari 7</span>
+            <h2>Mengenal Diagram Venn</h2>
+            <p class="description">Diagram Venn menyajikan himpunan dalam bentuk lingkaran di dalam kotak Semesta (S).</p>
+            
+            <div class="venn-wrapper">
+                <div class="venn-circle circle-a">A (Bola)</div>
+                <div class="venn-circle circle-b">B (Game)</div>
+            </div>
+
+            <div class="info-box">
+                • <b>Lingkaran Merah Muda (A):</b> Himpunan Sepak Bola.<br>
+                • <b>Lingkaran Biru (B):</b> Himpunan Game.<br>
+                • <b>Tengah (Irisan):</b> Siswa yang menyukai keduanya.
+            </div>
+        </div>
+
+        <!-- TAHAP 4 -->
+        <div class="step-content" id="step4">
+            <span class="step-badge">Tahap 4 dari 7</span>
+            <h2>Menentukan Irisan (A ∩ B)</h2>
+            <p class="description"><b>Langkah:</b> Pilih nama siswa di bawah, lalu sentuh/klik area Diagram Venn tempat siswa tersebut berada!</p>
+
+            <div class="cards-container" id="cardsStep4">
+                <div class="item-card" onclick="selectCard(this, 'Budi')">Budi (Bola)</div>
+                <div class="item-card" onclick="selectCard(this, 'Andi')">Andi (Game)</div>
+                <div class="item-card" onclick="selectCard(this, 'Citra')">Citra (Keduanya)</div>
+                <div class="item-card" onclick="selectCard(this, 'Eka')">Eka (Luar)</div>
+            </div>
+
+            <div class="venn-wrapper">
+                <div class="venn-circle circle-a">A</div>
+                <div class="venn-circle circle-b">B</div>
+                
+                <div class="venn-zone zone-outside" onclick="placeCard('outside')" id="zone-outside-4">Semesta (Luar)</div>
+                <div class="venn-zone zone-only-a" onclick="placeCard('onlyA')" id="zone-onlyA-4"></div>
+                <div class="venn-zone zone-intersection" onclick="placeCard('intersection')" id="zone-intersection-4"><b>Irisan (A ∩ B)</b></div>
+                <div class="venn-zone zone-only-b" onclick="placeCard('onlyB')" id="zone-onlyB-4"></div>
+            </div>
+
+            <div class="feedback-box" id="feedback4"></div>
+        </div>
+
+        <!-- TAHAP 5 -->
+        <div class="step-content" id="step5">
+            <span class="step-badge">Tahap 5 dari 7</span>
+            <h2>Menentukan Gabungan (A ∪ B)</h2>
+            <p class="description"><b>Gabungan (A ∪ B)</b> adalah seluruh siswa yang menyukai Sepak Bola, Game, ATAU keduanya.</p>
+
+            <div class="info-box">
+                Berdasarkan posisi pada Diagram Venn:<br>
+                <b>A ∪ B = { Budi, Denis, Citra, Andi }</b><br>
+                <i>Catatan: Eka tidak masuk gabungan karena berada di luar kedua lingkaran.</i>
+            </div>
+        </div>
+
+        <!-- TAHAP 6 -->
+        <div class="step-content" id="step6">
+            <span class="step-badge">Tahap 6 dari 7</span>
+            <h2>Menentukan Selisih (A - B)</h2>
+            <p class="description"><b>Selisih (A - B)</b> adalah siswa yang menyukai Sepak Bola TETAPI TIDAK menyukai Game.</p>
+
+            <div class="info-box">
+                Siswa yang HANYA di lingkaran A (tidak kena lingkaran B):<br>
+                <b>A - B = { Budi, Denis }</b>
+            </div>
+        </div>
+
+        <!-- TAHAP 7 -->
+        <div class="step-content" id="step7">
+            <span class="step-badge">Tahap 7 dari 7</span>
+            <h2>Refleksi Belajar Mandiri</h2>
+            <p class="description">Hebat! Kamu telah menyelesaikan petualangan belajar himpunan. Bagaimanakah perasaanmu?</p>
+
+            <button class="reflection-option" onclick="finishReflection('Sangat Mudah!')">
+                😊 Saya memahami perbedaan Irisan, Gabungan, dan Selisih dengan sangat baik.
+            </button>
+            <button class="reflection-option" onclick="finishReflection('Butuh Coba Lagi')">
+                🤔 Saya masih butuh sedikit mengulang latihan di bagian Irisan.
+            </button>
+
+            <div class="feedback-box correct" id="finalMsg" style="display:none; margin-top:15px;">
+                Terima kasih atas refleksinya! Kamu bisa mengulang belajar kapan saja. 🎉
+            </div>
+        </div>
     </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-buttons">
+        <button class="btn btn-prev" id="btnPrev" onclick="changeStep(-1)" disabled>Kembali</button>
+        <button class="btn btn-next" id="btnNext" onclick="changeStep(1)">Lanjut</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 7;
+    let selectedCard = null;
+
+    const correctPlacement = {
+        'Budi': 'onlyA',
+        'Andi': 'onlyB',
+        'Citra': 'intersection',
+        'Eka': 'outside'
+    };
+
+    let userPlacement = {};
+
+    function updateStepView() {
+        document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+        document.getElementById(`step${currentStep}`).classList.add('active');
+
+        // Update progress bar
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+
+        // Nav buttons state
+        document.getElementById('btnPrev').disabled = (currentStep === 1);
+        
+        if (currentStep === totalSteps) {
+            document.getElementById('btnNext').style.display = 'none';
+        } else {
+            document.getElementById('btnNext').style.display = 'block';
+        }
+    }
+
+    function changeStep(dir) {
+        if (currentStep + dir >= 1 && currentStep + dir <= totalSteps) {
+            currentStep += dir;
+            updateStepView();
+        }
+    }
+
+    function selectCard(cardEl, name) {
+        document.querySelectorAll('#cardsStep4 .item-card').forEach(c => c.classList.remove('selected'));
+        cardEl.classList.add('selected');
+        selectedCard = name;
+    }
+
+    function placeCard(zoneId) {
+        if (!selectedCard) {
+            alert('Silakan pilih nama siswa terlebih dahulu!');
+            return;
+        }
+
+        userPlacement[selectedCard] = zoneId;
+
+        // Render card inside zone
+        const targetZone = document.getElementById(`zone-${zoneId}-4`);
+        const newCard = document.createElement('div');
+        newCard.className = 'item-card placed';
+        newCard.innerText = selectedCard;
+        targetZone.appendChild(newCard);
+
+        // Hide selected card from choices
+        document.querySelectorAll('#cardsStep4 .item-card').forEach(c => {
+            if (c.classList.contains('selected')) {
+                c.style.visibility = 'hidden';
+            }
+        });
+
+        selectedCard = null;
+        checkStep4AutoCorrection();
+    }
+
+    function checkStep4AutoCorrection() {
+        if (Object.keys(userPlacement).length === 4) {
+            let isAllCorrect = true;
+            for (let name in correctPlacement) {
+                if (userPlacement[name] !== correctPlacement[name]) {
+                    isAllCorrect = false;
+                    break;
+                }
+            }
+
+            const feedbackEl = document.getElementById('feedback4');
+            if (isAllCorrect) {
+                feedbackEl.className = 'feedback-box correct';
+                feedbackEl.innerText = '✨ Luar Biasa! Semua posisi anggota himpunan sudah tepat!';
+            } else {
+                feedbackEl.className = 'feedback-box incorrect';
+                feedbackEl.innerText = '💡 Masih ada posisi yang kurang pas. Cobalah ingat: Citra menyukai KEDUANYA maka ada di tengah!';
+            }
+        }
+    }
+
+    function finishReflection(choice) {
+        document.getElementById('finalMsg').style.display = 'block';
+    }
+</script>
+
 </body>
 </html>
